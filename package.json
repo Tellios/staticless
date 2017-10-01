@@ -6,11 +6,13 @@
   "scripts": {
     "lint": "tslint --fix src/**/*.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prebuild": "rimraf dist",
+    "cleanDist": "rimraf dist",
+    "prebuild": "npm run cleanDist",
     "build": "tsc",
-    "prebuild:watch": "rimraf dist",
+    "prebuild:watch": "npm run cleanDist",
     "build:watch":  "tsc --watch",
-    "start": "node dist/run"
+    "start": "node --inspect-brk=5858 --no-lazy dist/run",
+    "start:debug": "npm run build && npm run start"
   },
   "repository": {
     "type": "git",

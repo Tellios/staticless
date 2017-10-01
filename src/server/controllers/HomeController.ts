@@ -10,15 +10,20 @@ import {
 import { Log } from "../Log";
 import { BaseController } from "./base/BaseController";
 
-@controller("/wiki")
+@controller("/home")
 @injectable()
-export class WikiController extends BaseController {
+export class HomeController extends BaseController {
     constructor(private log: Log) {
         super();
     }
 
+    @get("/")
+    public index(request: Request, reply: Base_Reply) {
+        reply.response("Hello world from index");
+    }
+
     @get("/test")
     public test(request: Request, reply: Base_Reply) {
-        reply.response("Hello world");
+        reply.response("Hello world from test");
     }
 }

@@ -13,9 +13,15 @@ export abstract class BaseController {
     public getRoutes(): IRouteConfig[] {
         return Object.entries(this.rawRoutes)
             .map((entry) => {
+                let routePath = this.basePath;
+
+                if (entry[1].path !== "/") {
+                    routePath += entry[1].path;
+                }
+
                 return {
                     ...entry[1],
-                    path: this.basePath + entry[1].path,
+                    path: routePath,
                 } as IRouteConfig;
             });
     }

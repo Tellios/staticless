@@ -4,7 +4,6 @@ import * as winston from "winston";
 import { configureContainer } from "./configureContainer";
 import { configureRouting } from "./configureRouting";
 import { BaseController } from "./controllers/base/BaseController";
-import { WikiController } from "./controllers/WikiController";
 import { Log } from "./Log";
 
 export class Server {
@@ -49,8 +48,6 @@ export class Server {
     private initializeContainer(log: Log): Container {
         const container = new Container();
         configureContainer(container, log);
-        container.bind<WikiController>(WikiController).to(WikiController);
-        container.bind<BaseController>(BaseController).to(WikiController);
 
         return container;
     }
