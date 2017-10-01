@@ -1,0 +1,42 @@
+{
+  "name": "staticless",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/run.js",
+  "scripts": {
+    "lint": "tslint --fix src/**/*.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prebuild": "rimraf dist",
+    "build": "tsc",
+    "prebuild:watch": "rimraf dist",
+    "build:watch":  "tsc --watch",
+    "start": "node dist/run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tellios/staticless.git"
+  },
+  "author": "Sonny Johannesson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Tellios/staticless/issues"
+  },
+  "homepage": "https://github.com/Tellios/staticless#readme",
+  "devDependencies": {
+    "@types/hapi": "^16.1.10",
+    "@types/inert": "^4.2.3",
+    "@types/node": "^8.0.31",
+    "@types/winston": "^2.3.6",
+    "rimraf": "^2.6.2",
+    "tslint": "^5.7.0",
+    "typescript": "^2.5.3"
+  },
+  "dependencies": {
+    "hapi": "^16.6.2",
+    "inert": "^4.2.1",
+    "inversify": "^4.3.0",
+    "marked": "^0.3.6",
+    "reflect-metadata": "^0.1.10",
+    "winston": "^2.3.1"
+  }
+}
