@@ -1,6 +1,6 @@
 import {
     RouteConfiguration,
-    Server,
+    Server
 } from "hapi";
 import { injectable } from "inversify";
 import { IRouteConfig } from "../../decorators/routing";
@@ -21,7 +21,7 @@ export abstract class BaseController {
 
                 return {
                     ...entry[1],
-                    path: routePath,
+                    path: routePath
                 } as IRouteConfig;
             });
     }

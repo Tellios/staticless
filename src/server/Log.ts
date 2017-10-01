@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import {
     LeveledLogMethod,
-    LoggerInstance,
+    LoggerInstance
 } from "winston";
 
 @injectable()
@@ -13,7 +13,7 @@ export class Log {
     public readonly debug: LeveledLogMethod;
 
     constructor(
-        private logger: LoggerInstance,
+        private logger: LoggerInstance
     ) {
         this.error = logger.error;
         this.warn = logger.warn;

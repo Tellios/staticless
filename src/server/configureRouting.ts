@@ -1,6 +1,6 @@
 import {
     RouteConfiguration,
-    Server as HapiServer,
+    Server as HapiServer
 } from "hapi";
 import { Container } from "inversify";
 import { BaseController } from "./controllers/base/BaseController";
@@ -10,8 +10,10 @@ export function configureRouting(hapiServer: HapiServer, controllers: BaseContro
         const routes = controller.getRoutes();
 
         const hapiRoutes = routes.map((route) => {
+            route.handler = route.handler.bind(controller);
+
             return {
-                ...route,
+                ...route
             } as RouteConfiguration;
         });
 

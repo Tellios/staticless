@@ -35,6 +35,9 @@ build/Release
 # Build output
 dist
 
+# Development config
+config.json
+
 # Dependency directories
 node_modules/
 jspm_packages/

@@ -15,7 +15,7 @@ function methodDecoratorFunctionFactory(method: string, path: string) {
         addRoute(target as IControllerObject, key, {
             handler: descriptor.value,
             method,
-            path,
+            path
         });
         return target;
     };
