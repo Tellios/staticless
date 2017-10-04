@@ -4,21 +4,16 @@
         "allowJs": false,
         "alwaysStrict": true,
         "newLine": "LF",
-        "outDir": "./dist",
-        "target": "es2015",
+        "outFile": "./dist/client/app.js",
+        "target": "es5",
         "sourceMap": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
+        "jsx": "react",
         "lib": [
             "es2017",
             "dom"
         ]
     },
     "include": [
-        "./src/server/**/*",
-        "./src/run.ts"
-    ],
-    "exclude": [
-        "node_modules"
+        "src/client/**/*"
     ]
 }

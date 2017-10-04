@@ -16,7 +16,8 @@
                 "type": "node",
                 "request": "launch",
                 "name": "Launch Program",
-                "program": "${workspaceRoot}\\dist\\run.js",
+                "program": "${workspaceRoot}/dist/run.js",
+                "cwd": "${workspaceRoot}/dist",
                 "env": {
                     "NODE_ENV": "development"
                 },

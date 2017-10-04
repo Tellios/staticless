@@ -8,9 +8,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "cleanDist": "rimraf dist",
     "prebuild": "npm run cleanDist",
-    "build": "tsc",
+    "build": "tsc && webpack",
     "prebuild:watch": "npm run cleanDist",
-    "build:watch": "tsc --watch",
+    "build:watch": "concurrently \"tsc --watch\" \"webpack --watch\" ",
     "start": "node --inspect-brk=5858 --no-lazy dist/run",
     "start:debug": "npm run build && npm run start"
   },
@@ -30,11 +30,17 @@
     "@types/inert": "^4.2.3",
     "@types/marked": "^0.3.0",
     "@types/node": "^8.0.31",
+    "@types/react": "^16.0.9",
+    "@types/react-dom": "^16.0.0",
     "@types/superagent": "^3.5.5",
     "@types/winston": "^2.3.6",
+    "awesome-typescript-loader": "^3.2.3",
+    "concurrently": "^3.5.0",
+    "copy-webpack-plugin": "^4.1.0",
     "rimraf": "^2.6.2",
     "tslint": "^5.7.0",
-    "typescript": "^2.5.3"
+    "typescript": "^2.5.3",
+    "webpack": "^3.6.0"
   },
   "dependencies": {
     "fs-extra": "^4.0.2",
@@ -43,6 +49,8 @@
     "inert": "^4.2.1",
     "inversify": "^4.3.0",
     "marked": "^0.3.6",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "reflect-metadata": "^0.1.10",
     "superagent": "^3.6.1",
     "winston": "^2.3.1"

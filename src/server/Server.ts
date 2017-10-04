@@ -64,7 +64,8 @@ export class Server {
     private intializeHapiServer(): HapiServer {
         const hapiServer = new HapiServer();
         hapiServer.register([
-            require("hapi-async-handler")
+            require("hapi-async-handler"),
+            require("inert")
         ]);
         hapiServer.connection({
             port: 8080
