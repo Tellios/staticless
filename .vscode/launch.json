@@ -23,7 +23,8 @@
                 "outFiles": [
                     "${workspaceRoot}/dist/**/*.js"
                 ],
-                "sourceMaps": true
+                "sourceMaps": true,
+                "smartStep": true
             }
         ]
     }

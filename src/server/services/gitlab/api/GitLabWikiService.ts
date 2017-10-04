@@ -1,4 +1,5 @@
 import { injectable } from "inversify";
+import * as marked from "marked";
 import { Config } from "../../../Config";
 import { GitLabApiRepository } from "./GitLabApiRepository";
 import { IWikiPage } from "./IWikiPage";
@@ -26,10 +27,21 @@ export class GitLabWikiService {
 
     public async getPage(slug: string): Promise<IWikiPage> {
         let path = this.getWikiApiPath();
-        path += `/${slug}`;
+        path += `/${encodeURIComponent(slug)}`;
 
         const response = await this.api.get(path);
-        return response.body;
+        const page = response.body as IWikiPage;
+
+        return new Promise<IWikiPage>((resolve, reject) => {
+            marked(page.content, (err, result) => {
+                if (err) {
+                    return reject(new Error(`Unable to parse page: ${slug}`));
+                }
+
+                page.content = result;
+                resolve(page);
+            });
+        });
     }
 
     private getWikiApiPath() {

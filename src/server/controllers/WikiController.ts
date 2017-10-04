@@ -11,9 +11,9 @@ import { Log } from "../Log";
 import { GitLabWikiService } from "../services/gitlab/api/GitLabWikiService";
 import { BaseController } from "./base/BaseController";
 
-@controller("/view")
+@controller("/wiki")
 @injectable()
-export class ViewController extends BaseController {
+export class WikiController extends BaseController {
     constructor(
         private log: Log,
         private wikiService: GitLabWikiService
@@ -32,7 +32,7 @@ export class ViewController extends BaseController {
         }
     }
 
-    @get("/{slug}")
+    @get("/{slug*}")
     public async getPage(request: Request, reply: Base_Reply) {
         try {
             const slug = request.params.slug as string;
