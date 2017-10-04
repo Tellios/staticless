@@ -40,7 +40,7 @@ export class WikiController extends BaseController {
             reply.response(page);
         } catch (error) {
             reply.response(error.toString())
-                .code(500);
+                .code(error.status);
         }
     }
 

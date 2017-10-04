@@ -5,6 +5,7 @@ import { PageComponent } from "./PageComponent";
 
 export interface IAppComponentState {
     page: any;
+    error?: any;
 }
 
 export class AppComponent extends React.Component<any, any> {
@@ -15,11 +16,11 @@ export class AppComponent extends React.Component<any, any> {
     }
 
     public componentDidMount() {
-        const slug = window.location.pathname.substr(1);
+        window.onpopstate = (event) => {
+            this.fetchPageUsingLocation();
+        };
 
-        if (slug.length > 0) {
-            this.fetchPage(slug);
-        }
+        this.fetchPageUsingLocation();
     }
 
     public render() {
@@ -27,28 +28,36 @@ export class AppComponent extends React.Component<any, any> {
             <div>
                 <NavComponent onNavigateToPage={this.handleNavigateToPage} />
                 {this.state.page && <PageComponent content={this.state.page.content} />}
+                {this.state.error && <div>{this.state.error.toString()}</div>}
             </div>
         );
     }
 
     private handleNavigateToPage(slug: string) {
-        const url = `${window.location.origin}/${encodeURIComponent(slug)}`;
+        const url = `${window.location.origin}/${slug}`;
         window.history.pushState(slug, slug, url);
         this.fetchPage(slug);
     }
 
+    private fetchPageUsingLocation() {
+        const slug = window.location.pathname.substr(1);
+
+        if (slug.length > 0) {
+            this.fetchPage(slug);
+        }
+    }
+
     private fetchPage(slug: string) {
-        /*slug = slug.replace(/\//g, ":::");*/
         slug = encodeURIComponent(slug);
 
         request(`/wiki/${slug}`).end((err, res) => {
             if (err) {
-                console.error(err);
+                this.setState({ ...this.state, page: undefined, error: err });
                 return;
             }
 
             const page = res.body;
-            this.setState({ ...this.state, page });
+            this.setState({ ...this.state, page, error: undefined });
         });
     }
 }
