@@ -9,7 +9,7 @@ export interface IAppComponentState {
 }
 
 export class AppComponent extends React.Component<any, any> {
-    constructor(props) {
+    constructor(props: any) {
         super(props);
         this.handleNavigateToPage = this.handleNavigateToPage.bind(this);
         this.state = {};
@@ -25,7 +25,7 @@ export class AppComponent extends React.Component<any, any> {
 
     public render() {
         return (
-            <div>
+            <div className="app-container">
                 <NavComponent onNavigateToPage={this.handleNavigateToPage} />
                 {this.state.page && <PageComponent content={this.state.page.content} />}
                 {this.state.error && <div>{this.state.error.toString()}</div>}

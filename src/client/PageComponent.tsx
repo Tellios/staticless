@@ -7,7 +7,7 @@ export interface IPageComponentProps {
 export class PageComponent extends React.Component<IPageComponentProps, any> {
     public render() {
         return (
-            <div dangerouslySetInnerHTML={{ __html: this.props.content }}></div>
+            <div className="wiki-content" dangerouslySetInnerHTML={{ __html: this.props.content }}></div>
         );
     }
 }

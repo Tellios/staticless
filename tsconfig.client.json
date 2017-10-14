@@ -7,6 +7,10 @@
         "outFile": "./dist/client/app.js",
         "target": "es5",
         "sourceMap": true,
+        "strictNullChecks": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
         "jsx": "react",
         "lib": [
             "es2017",
@@ -14,6 +18,7 @@
         ]
     },
     "include": [
-        "src/client/**/*"
+        "src/client/**/*",
+        "src/models/**/*"
     ]
 }

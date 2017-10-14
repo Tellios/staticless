@@ -1,18 +1,23 @@
 import * as React from "react";
 import * as request from "superagent";
+import { Staticless } from "../models/gitlab";
+import { MenuItemComponent } from "./MenuItemComponent";
 
-export interface INavComponentProps {
+export interface INavProps {
     onNavigateToPage(slug: string): void;
 }
 
-export interface INavComponentState {
-    pages: any[];
+export interface INavState {
+    pages: Staticless.GitLab.IWikiPageTreeItem[];
+    isOpen: boolean;
 }
 
-export class NavComponent extends React.Component<INavComponentProps, INavComponentState> {
-    constructor(props) {
+export class NavComponent extends React.Component<INavProps, INavState> {
+    constructor(props: any) {
         super(props);
-        this.state = { pages: [] };
+        this.state = { pages: [], isOpen: false };
+
+        this.handleMenuIconClick = this.handleMenuIconClick.bind(this);
     }
 
     public componentDidMount() {
@@ -28,17 +33,51 @@ export class NavComponent extends React.Component<INavComponentProps, INavCompon
 
     public render() {
         return (
-            <nav>
-                {this.state.pages && this.renderMenu()}
+            <nav className="nav-container">
+                {this.state.isOpen && this.renderOpenMenu()}
+                {this.state.isOpen && this.state.pages && this.renderMenuItems()}
+                {!this.state.isOpen && this.renderClosedMenu()}
             </nav>
         );
     }
 
-    private renderMenu() {
+    private renderOpenMenu() {
+        return (
+            <h2 className="nav-header-open">
+                <span onClick={this.handleMenuIconClick}
+                    className="material-icons nav-header-icon nav-header-icon-open">
+                    menu
+                </span>
+                Menu
+            </h2>
+        );
+    }
+
+    private renderClosedMenu() {
+        return (
+            <h2 className="nav-header-closed">
+                <span
+                    onClick={this.handleMenuIconClick}
+                    className="material-icons nav-header-icon nav-header-icon-closed">
+                    menu
+                </span>
+            </h2>
+        );
+    }
+
+    private renderMenuItems() {
         return this.state.pages.map((page, index) => {
             return (
-                <button key={index} onClick={() => this.props.onNavigateToPage(page.slug)}>{page.title}</button>
+                <MenuItemComponent
+                    key={index}
+                    menuItem={page}
+                    onClick={this.props.onNavigateToPage}
+                />
             );
         });
+    }
+
+    private handleMenuIconClick() {
+        this.setState({ ...this.state, isOpen: !this.state.isOpen });
     }
 }

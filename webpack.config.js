@@ -35,6 +35,7 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin([
             { from: "./src/client/index.html" },
+            { from: "./src/client/app.css" },
             { from: "./src/client/favicon.ico" },
             { from: "./config.json", to: "../config.json" }
         ])

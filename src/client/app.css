@@ -1,0 +1,92 @@
+html,
+body,
+#root {
+    height: 100%;
+    margin: 0;
+
+    font-family: 'Roboto', sans-serif;
+}
+
+.app-container {
+    display: -webkit-flex;
+    display: flex;
+
+    flex-direction: row;
+
+    height: 100%;
+    min-width: 500px;
+}
+
+.nav-container {
+    height: 100%;
+    padding: 0 10px;
+    border-right: 1px solid black;
+}
+
+.nav-header-open {
+    display: -webkit-flex;
+    display: flex;
+
+    flex-direction: row;
+    align-items: center;
+
+    min-width: 200px;
+}
+
+.nav-header-closed {
+    width: 26px;
+}
+
+.nav-header-icon {
+    cursor: pointer;
+}
+
+.nav-header-icon-open {
+    margin-right: 10px;
+}
+
+.nav-header-icon-closed {
+    margin-right: 0;
+}
+
+.wiki-content {
+    margin-left: 40px;
+}
+
+.menu-item-icon {
+    cursor: pointer;
+}
+
+.menu-item-icon:hover {
+    color: blue;
+}
+
+.menu-item-label {
+    display: -webkit-flex;
+    display: flex;
+
+    flex-direction: row;
+    align-items: center;
+
+    margin-top: 5px;
+}
+
+.menu-item-label-text {
+    cursor: pointer;
+}
+
+.menu-item-label-text:hover {
+    color: blue;
+}
+
+.menu-item-children {
+    display: -webkit-flex;
+    display: flex;
+
+    flex-direction: column;
+    margin-left: 15px;
+}
+
+.menu-item-child {
+    margin-left: 9px;
+}
