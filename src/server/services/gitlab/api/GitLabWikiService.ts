@@ -122,20 +122,21 @@ export class GitLabWikiService {
         page: Staticless.GitLab.IWikiPageItemWithSlugParts
     ) {
         for (let i = 0; i < slugParts.length; i++) {
+            const slug = slugParts.slice(0, i + 1).join("/");
             const part = slugParts[i];
 
             if (i === (slugParts.length - 1)) {
                 tree.push({
                     children: [],
                     page,
-                    slugPart: part,
+                    slugPart: slug,
                     title: page.title
                 });
             } else {
                 const node = {
                     children: [],
                     page: null,
-                    slugPart: part,
+                    slugPart: slug,
                     title: part
                 };
                 tree.push(node);

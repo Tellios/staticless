@@ -4,20 +4,18 @@ import { Staticless } from "../models/gitlab";
 import { MenuItemComponent } from "./MenuItemComponent";
 
 export interface INavProps {
-    onNavigateToPage(slug: string): void;
+    onNavigateToPage: (slug: string) => void;
+    isOpen: boolean;
 }
 
 export interface INavState {
     pages: Staticless.GitLab.IWikiPageTreeItem[];
-    isOpen: boolean;
 }
 
 export class NavComponent extends React.Component<INavProps, INavState> {
-    constructor(props: any) {
+    constructor(props: INavProps) {
         super(props);
-        this.state = { pages: [], isOpen: false };
-
-        this.handleMenuIconClick = this.handleMenuIconClick.bind(this);
+        this.state = { pages: [] };
     }
 
     public componentDidMount() {
@@ -32,36 +30,15 @@ export class NavComponent extends React.Component<INavProps, INavState> {
     }
 
     public render() {
+        const className = [
+            "nav-container",
+            this.props.isOpen ? "nav-container-open" : "nav-container-closed"
+        ].join(" ");
+
         return (
-            <nav className="nav-container">
-                {this.state.isOpen && this.renderOpenMenu()}
-                {this.state.isOpen && this.state.pages && this.renderMenuItems()}
-                {!this.state.isOpen && this.renderClosedMenu()}
+            <nav className={className}>
+                {this.props.isOpen && this.state.pages && this.renderMenuItems()}
             </nav>
-        );
-    }
-
-    private renderOpenMenu() {
-        return (
-            <h2 className="nav-header-open">
-                <span onClick={this.handleMenuIconClick}
-                    className="material-icons nav-header-icon nav-header-icon-open">
-                    menu
-                </span>
-                Menu
-            </h2>
-        );
-    }
-
-    private renderClosedMenu() {
-        return (
-            <h2 className="nav-header-closed">
-                <span
-                    onClick={this.handleMenuIconClick}
-                    className="material-icons nav-header-icon nav-header-icon-closed">
-                    menu
-                </span>
-            </h2>
         );
     }
 
@@ -75,9 +52,5 @@ export class NavComponent extends React.Component<INavProps, INavState> {
                 />
             );
         });
-    }
-
-    private handleMenuIconClick() {
-        this.setState({ ...this.state, isOpen: !this.state.isOpen });
     }
 }

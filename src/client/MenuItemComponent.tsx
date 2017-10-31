@@ -13,13 +13,18 @@ export interface IMenuItemState {
 export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItemState> {
     constructor(props: IMenuItemProps) {
         super(props);
-        this.state = { isOpen: false };
+        this.state = { isOpen: this.shouldBeOpen(props.menuItem) };
 
         this.handleMenuItemClick = this.handleMenuItemClick.bind(this);
         this.handleFolderClick = this.handleFolderClick.bind(this);
     }
 
     public render(): any {
+        const labelClassName = [
+            "menu-item-label-text",
+            this.isSelected(this.props.menuItem) ? "menu-item-label-text-selected" : ""
+        ].join(" ");
+
         return (
             <div className="menu-item">
                 <div className="menu-item-label">
@@ -30,7 +35,7 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
                         </span>}
 
                     <span
-                        className="menu-item-label-text"
+                        className={labelClassName}
                         onClick={this.handleMenuItemClick}>
                         {this.props.menuItem.title}
                     </span>
@@ -72,5 +77,29 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
 
     private handleFolderClick() {
         this.setState({ isOpen: !this.state.isOpen });
+    }
+
+    private shouldBeOpen(menuItem: Staticless.GitLab.IWikiPageTreeItem) {
+        const slugPath = this.getWindowSlugPath();
+
+        if (slugPath && menuItem.children.length > 0) {
+            return slugPath.startsWith(menuItem.slugPart);
+        }
+
+        return false;
+    }
+
+    private isSelected(menuItem: Staticless.GitLab.IWikiPageTreeItem) {
+        const slugPath = this.getWindowSlugPath();
+
+        return menuItem.page && menuItem.page.slug === slugPath;
+    }
+
+    private getWindowSlugPath() {
+        if (window.location.pathname && window.location.pathname.length > 0) {
+            return window.location.pathname.slice(1, window.location.pathname.length);
+        } else {
+            return undefined;
+        }
     }
 }
