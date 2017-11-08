@@ -40,6 +40,14 @@ function configureClientRoutes(hapiServer: HapiServer) {
 
     hapiServer.route({
         handler: {
+            file: path.join(process.cwd(), "client", "code-block-styles.css")
+        },
+        method: "GET",
+        path: "/code-block-styles.css"
+    });
+
+    hapiServer.route({
+        handler: {
             file: path.join(process.cwd(), "client", "favicon.ico")
         },
         method: "GET",

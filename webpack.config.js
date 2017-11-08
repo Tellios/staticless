@@ -37,7 +37,8 @@ module.exports = {
             { from: "./src/client/index.html" },
             { from: "./src/client/app.css" },
             { from: "./src/client/favicon.ico" },
-            { from: "./config.json", to: "../config.json" }
+            { from: "./config.json", to: "../config.json" },
+            { from: "./node_modules/highlight.js/styles/androidstudio.css", to: "code-block-styles.css" }
         ])
     ]
 }

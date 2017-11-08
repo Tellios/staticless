@@ -6,6 +6,7 @@ import { WikiController } from "./controllers/WikiController";
 import { Log } from "./Log";
 import { GitLabApiRepository } from "./services/gitlab/api/GitLabApiRepository";
 import { GitLabWikiService } from "./services/gitlab/api/GitLabWikiService";
+import { MarkdownParserService } from "./services/markdown/MarkdownParserService";
 
 export function configureContainer(container: Container, log: Log, settings: Config) {
     container.bind(Log).toConstantValue(log);
@@ -18,4 +19,5 @@ export function configureContainer(container: Container, log: Log, settings: Con
 
     container.bind(GitLabApiRepository).to(GitLabApiRepository);
     container.bind(GitLabWikiService).to(GitLabWikiService);
+    container.bind(MarkdownParserService).to(MarkdownParserService);
 }

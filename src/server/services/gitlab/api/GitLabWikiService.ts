@@ -1,14 +1,15 @@
 import { injectable } from "inversify";
-import * as marked from "marked";
 import { Staticless } from "../../../../models/gitlab.d";
 import { Config } from "../../../Config";
+import { MarkdownParserService } from "../../markdown/MarkdownParserService";
 import { GitLabApiRepository } from "./GitLabApiRepository";
 
 @injectable()
 export class GitLabWikiService {
     constructor(
         private config: Config,
-        private api: GitLabApiRepository
+        private api: GitLabApiRepository,
+        private markdown: MarkdownParserService
     ) { }
 
     public async getPageList(): Promise<Staticless.GitLab.IWikiPageTreeItem[]> {
@@ -33,16 +34,9 @@ export class GitLabWikiService {
         const response = await this.api.get(path);
         const page = response.body as Staticless.GitLab.IWikiPage;
 
-        return new Promise<Staticless.GitLab.IWikiPage>((resolve, reject) => {
-            marked(page.content, { gfm: true }, (err, result) => {
-                if (err) {
-                    return reject(new Error(`Unable to parse page: ${slug}`));
-                }
+        page.content = await this.markdown.parse(page.content);
 
-                page.content = result;
-                resolve(page);
-            });
-        });
+        return page;
     }
 
     private getWikiApiPath() {

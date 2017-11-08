@@ -54,8 +54,6 @@ body,
 .nav-container {
     position: relative;
     background-color: #F5F5F6;
-
-    padding: 20px;
 }
 
 .nav-container-open {
@@ -64,6 +62,7 @@ body,
 
     width: 400px;
     left: 0px;
+    padding: 20px;
 
     transition: width 0.2s ease-out;
 }
@@ -128,4 +127,43 @@ body,
 
 .menu-item-child {
     margin-left: 9px;
+}
+
+.anchored-header:hover > .anchor {
+    opacity: 1;
+}
+
+.anchor {
+    opacity: 0;
+}
+
+.anchor-icon {
+    color: silver;
+}
+
+.anchor-icon:hover {
+    color: #007ac1;
+}
+
+.code-block {
+    border-radius: 4px;
+    padding: 10px;
+}
+
+table {
+    border: 1px solid silver;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: #FAFAFA;
+    padding: 8px 16px 8px 16px;
+    border: 1px solid rgb(221, 221, 221);
+    border-bottom: 2px solid rgb(221, 221, 221);
+    font-weight: normal;
+}
+
+td {
+    padding: 8px 16px 8px 16px;
+    border: 1px solid rgb(221, 221, 221);
 }

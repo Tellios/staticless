@@ -14,11 +14,17 @@ export interface IAppComponentState {
 }
 
 export class AppComponent extends React.Component<any, IAppComponentState> {
+    private readonly STORE_MENU_OPEN = "nav-menu-open";
+
     constructor(props: any) {
         super(props);
         this.handleMenuClick = this.handleMenuClick.bind(this);
         this.handleNavigateToPage = this.handleNavigateToPage.bind(this);
-        this.state = { isMenuOpen: false };
+
+        const isOpenValue = localStorage[this.STORE_MENU_OPEN];
+        const isOpen = isOpenValue === "true";
+
+        this.state = { isMenuOpen: isOpen };
     }
 
     public componentDidMount() {
@@ -47,7 +53,9 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
     }
 
     private handleMenuClick() {
-        this.setState({ ...this.state, isMenuOpen: !this.state.isMenuOpen });
+        const isOpen = !this.state.isMenuOpen;
+        localStorage.setItem(this.STORE_MENU_OPEN, String(isOpen));
+        this.setState({ ...this.state, isMenuOpen: isOpen });
     }
 
     private handleNavigateToPage(slug: string) {
