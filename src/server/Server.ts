@@ -30,7 +30,12 @@ export class Server {
                 return;
             }
 
-            log.info(`Server running at: ${hapiServer.info.uri}`);
+            if (hapiServer.info) {
+                log.info(`Server running at: ${hapiServer.info.uri}`);
+            } else {
+                log.error("Server was started but had no info attached to it");
+                process.exit(1);
+            }
         });
     }
 
@@ -64,7 +69,8 @@ export class Server {
     private intializeHapiServer(): HapiServer {
         const hapiServer = new HapiServer();
         hapiServer.register([
-            require("hapi-async-handler")
+            require("hapi-async-handler"),
+            require("inert")
         ]);
         hapiServer.connection({
             port: 8080
