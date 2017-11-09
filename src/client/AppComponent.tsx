@@ -2,8 +2,8 @@ import * as React from "react";
 import * as request from "superagent";
 import { Staticless as Config } from "../models/config";
 import { HeaderComponent } from "./HeaderComponent";
-import { NavComponent } from "./NavComponent";
-import { PageComponent } from "./PageComponent";
+import { NavContainer } from "./nav/NavContainer";
+import { PageContainer } from "./page/PageContainer";
 import { LoadingComponent } from "./LoadingComponent";
 
 export interface IAppComponentState {
@@ -45,7 +45,7 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
                     && <HeaderComponent title={this.state.config.title} onMenuClick={this.handleMenuClick} />
                 }
                 <div className="app-container">
-                    <NavComponent onNavigateToPage={this.handleNavigateToPage} isOpen={this.state.isMenuOpen} />
+                    <NavContainer onNavigateToPage={this.handleNavigateToPage} isOpen={this.state.isMenuOpen} />
                     {this.renderContent()}
                 </div>
             </div>
@@ -58,7 +58,7 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
         } else if (this.state.error) {
             return <div>{this.state.error.toString()}</div>;
         } else if (this.state.slug) {
-            return <PageComponent slug={this.state.slug} />;
+            return <PageContainer slug={this.state.slug} />;
         } else {
             return <div></div>;
         }

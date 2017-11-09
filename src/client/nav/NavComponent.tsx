@@ -1,36 +1,16 @@
 import * as React from "react";
-import * as request from "superagent";
-import { Staticless } from "../models/gitlab";
+import { Staticless } from "../../models/gitlab";
+import { LoadingComponent } from "../LoadingComponent";
 import { MenuItemComponent } from "./MenuItemComponent";
-import { LoadingComponent } from "./LoadingComponent";
 
-export interface INavProps {
-    onNavigateToPage: (slug: string) => void;
-    isOpen: boolean;
-}
-
-export interface INavState {
+export interface INavComponentProps {
     pages: Staticless.GitLab.IWikiPageTreeItem[];
     isLoading: boolean;
+    isOpen: boolean;
+    onNavigateToPage(slug: string): void;
 }
 
-export class NavComponent extends React.Component<INavProps, INavState> {
-    constructor(props: INavProps) {
-        super(props);
-        this.state = { pages: [], isLoading: true };
-    }
-
-    public componentDidMount() {
-        request.get(`/wiki`)
-            .end((err, res) => {
-                if (err) {
-                    return console.error(err);
-                }
-
-                this.setState({ pages: res.body, isLoading: false });
-            });
-    }
-
+export class NavComponent extends React.Component<INavComponentProps> {
     public render() {
         const className = [
             "nav-container",
@@ -45,7 +25,7 @@ export class NavComponent extends React.Component<INavProps, INavState> {
     }
 
     private renderContent() {
-        if (this.state.isLoading) {
+        if (this.props.isLoading) {
             return this.renderLoadingIndicator();
         } else {
             return this.renderMenuItems();
@@ -57,7 +37,7 @@ export class NavComponent extends React.Component<INavProps, INavState> {
     }
 
     private renderMenuItems() {
-        return this.state.pages.map((page, index) => {
+        return this.props.pages.map((page, index) => {
             return (
                 <MenuItemComponent
                     key={index}

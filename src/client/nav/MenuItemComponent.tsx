@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Staticless } from "../models/gitlab";
+import { Staticless } from "../../models/gitlab";
 
 export interface IMenuItemProps {
     menuItem: Staticless.GitLab.IWikiPageTreeItem;
@@ -50,7 +50,7 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
         return (
             <div className="menu-item-children">
                 {
-                    this.props.menuItem.children.map((child, index) => {
+                    this.props.menuItem.children.map((child: Staticless.GitLab.IWikiPageTreeItem, index: number) => {
                         const key = `${index}-${child.slugPart}`;
                         return (
                             <div className="menu-item-child" key={key}>

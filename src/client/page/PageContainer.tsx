@@ -1,9 +1,10 @@
 import * as React from "react";
 import * as request from "superagent";
-import { Staticless as GitLab } from "../models/gitlab";
-import { LoadingComponent } from "./LoadingComponent";
+import { Staticless as GitLab } from "../../models/gitlab";
+import { LoadingComponent } from "../LoadingComponent";
+import { PageComponent } from "./PageComponent";
 
-export interface IPageComponentProps {
+export interface IPageContainerProps {
     slug: string;
 }
 
@@ -13,8 +14,8 @@ export interface IPageComponentState {
     isLoadingPage: boolean;
 }
 
-export class PageComponent extends React.Component<IPageComponentProps, IPageComponentState> {
-    constructor(props: IPageComponentProps) {
+export class PageContainer extends React.Component<IPageContainerProps, IPageComponentState> {
+    constructor(props: IPageContainerProps) {
         super(props);
         this.state = { isLoadingPage: false };
     }
@@ -23,7 +24,7 @@ export class PageComponent extends React.Component<IPageComponentProps, IPageCom
         this.fetchPage(this.props.slug);
     }
 
-    public componentDidUpdate(oldProps: IPageComponentProps) {
+    public componentDidUpdate(oldProps: IPageContainerProps) {
         if (this.props.slug !== oldProps.slug) {
             this.fetchPage(this.props.slug);
         }
@@ -38,14 +39,12 @@ export class PageComponent extends React.Component<IPageComponentProps, IPageCom
     }
 
     private renderContent() {
-        if (this.state.isLoadingPage) {
-            return <LoadingComponent />;
-        } else if (this.state.error) {
+        if (this.state.error) {
             return <div>{this.state.error}</div>;
         } else if (this.state.page) {
-            return <div dangerouslySetInnerHTML={{ __html: this.state.page.content }}></div>;
+            return <PageComponent isLoading={this.state.isLoadingPage} content={this.state.page.content} />;
         } else {
-            return <div></div>;
+            return <PageComponent isLoading={this.state.isLoadingPage} />;
         }
     }
 

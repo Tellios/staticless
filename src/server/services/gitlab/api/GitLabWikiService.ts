@@ -1,3 +1,4 @@
+import { upperFirst } from "lodash";
 import { injectable } from "inversify";
 import { Staticless } from "../../../../models/gitlab.d";
 import { Config } from "../../../Config";
@@ -124,14 +125,14 @@ export class GitLabWikiService {
                     children: [],
                     page,
                     slugPart: slug,
-                    title: page.title
+                    title: upperFirst(page.title)
                 });
             } else {
                 const node = {
                     children: [],
                     page: null,
                     slugPart: slug,
-                    title: part
+                    title: upperFirst(part)
                 };
                 tree.push(node);
                 tree = node.children;
