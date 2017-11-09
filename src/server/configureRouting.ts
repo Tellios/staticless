@@ -5,6 +5,7 @@ import {
 import { Container } from "inversify";
 import * as path from "path";
 import * as process from "process";
+import { readdirSync } from "fs-extra";
 import * as url from "url";
 import { BaseController } from "./controllers/base/BaseController";
 
@@ -22,37 +23,51 @@ function configureClientRoutes(hapiServer: HapiServer) {
         path: "/{path*}"
     });
 
-    hapiServer.route({
-        handler: {
-            file: path.join(process.cwd(), "client", "app.js")
-        },
-        method: "GET",
-        path: "/app.js"
-    });
+    const clientFiles = readdirSync(path.join(process.cwd(), "client"));
 
-    hapiServer.route({
-        handler: {
-            file: path.join(process.cwd(), "client", "app.css")
-        },
-        method: "GET",
-        path: "/app.css"
-    });
+    for (const file of clientFiles) {
+        if (!file.endsWith("index.html")) {
+            hapiServer.route({
+                handler: {
+                    file: path.join(process.cwd(), "client", file)
+                },
+                method: "GET",
+                path: `/${file}`
+            });
+        }
+    }
 
-    hapiServer.route({
-        handler: {
-            file: path.join(process.cwd(), "client", "code-block-styles.css")
-        },
-        method: "GET",
-        path: "/code-block-styles.css"
-    });
+    // hapiServer.route({
+    //     handler: {
+    //         file: path.join(process.cwd(), "client", "app.js")
+    //     },
+    //     method: "GET",
+    //     path: "/app.js"
+    // });
 
-    hapiServer.route({
-        handler: {
-            file: path.join(process.cwd(), "client", "favicon.ico")
-        },
-        method: "GET",
-        path: "/favicon.ico"
-    });
+    // hapiServer.route({
+    //     handler: {
+    //         file: path.join(process.cwd(), "client", "app.css")
+    //     },
+    //     method: "GET",
+    //     path: "/app.css"
+    // });
+
+    // hapiServer.route({
+    //     handler: {
+    //         file: path.join(process.cwd(), "client", "code-block-styles.css")
+    //     },
+    //     method: "GET",
+    //     path: "/code-block-styles.css"
+    // });
+
+    // hapiServer.route({
+    //     handler: {
+    //         file: path.join(process.cwd(), "client", "favicon.ico")
+    //     },
+    //     method: "GET",
+    //     path: "/favicon.ico"
+    // });
 }
 
 function configureControllerRoutes(hapiServer: HapiServer, controllers: BaseController[]) {

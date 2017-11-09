@@ -2,6 +2,7 @@ import * as React from "react";
 import * as request from "superagent";
 import { Staticless } from "../models/gitlab";
 import { MenuItemComponent } from "./MenuItemComponent";
+import { LoadingComponent } from "./LoadingComponent";
 
 export interface INavProps {
     onNavigateToPage: (slug: string) => void;
@@ -10,12 +11,13 @@ export interface INavProps {
 
 export interface INavState {
     pages: Staticless.GitLab.IWikiPageTreeItem[];
+    isLoading: boolean;
 }
 
 export class NavComponent extends React.Component<INavProps, INavState> {
     constructor(props: INavProps) {
         super(props);
-        this.state = { pages: [] };
+        this.state = { pages: [], isLoading: true };
     }
 
     public componentDidMount() {
@@ -25,7 +27,7 @@ export class NavComponent extends React.Component<INavProps, INavState> {
                     return console.error(err);
                 }
 
-                this.setState({ pages: res.body });
+                this.setState({ pages: res.body, isLoading: false });
             });
     }
 
@@ -37,9 +39,21 @@ export class NavComponent extends React.Component<INavProps, INavState> {
 
         return (
             <nav className={className}>
-                {this.props.isOpen && this.state.pages && this.renderMenuItems()}
+                {this.props.isOpen && this.renderContent()}
             </nav>
         );
+    }
+
+    private renderContent() {
+        if (this.state.isLoading) {
+            return this.renderLoadingIndicator();
+        } else {
+            return this.renderMenuItems();
+        }
+    }
+
+    private renderLoadingIndicator() {
+        return <LoadingComponent />;
     }
 
     private renderMenuItems() {

@@ -5,12 +5,14 @@ import { Staticless as GitLab } from "../models/gitlab";
 import { HeaderComponent } from "./HeaderComponent";
 import { NavComponent } from "./NavComponent";
 import { PageComponent } from "./PageComponent";
+import { LoadingComponent } from "./LoadingComponent";
 
 export interface IAppComponentState {
     page?: GitLab.GitLab.IWikiPage;
     config?: Config.Config.Frontend;
     error?: any;
     isMenuOpen: boolean;
+    isLoadingPage: boolean;
 }
 
 export class AppComponent extends React.Component<any, IAppComponentState> {
@@ -24,7 +26,7 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
         const isOpenValue = localStorage[this.STORE_MENU_OPEN];
         const isOpen = isOpenValue === "true";
 
-        this.state = { isMenuOpen: isOpen };
+        this.state = { isMenuOpen: isOpen, isLoadingPage: false };
     }
 
     public componentDidMount() {
@@ -45,11 +47,22 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
                 }
                 <div className="app-container">
                     <NavComponent onNavigateToPage={this.handleNavigateToPage} isOpen={this.state.isMenuOpen} />
-                    {this.state.page && <PageComponent content={this.state.page.content} />}
-                    {this.state.error && <div>{this.state.error.toString()}</div>}
+                    {this.renderContent()}
                 </div>
             </div>
         );
+    }
+
+    private renderContent() {
+        if (this.state.isLoadingPage) {
+            return <LoadingComponent />;
+        } else if (this.state.page) {
+            return <PageComponent content={this.state.page.content} />;
+        } else if (this.state.error) {
+            return <div>{this.state.error.toString()}</div>;
+        } else {
+            return <div></div>;
+        }
     }
 
     private handleMenuClick() {
@@ -87,16 +100,18 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
     }
 
     private fetchPage(slug: string) {
+        this.setState({ ...this.state, isLoadingPage: true });
+
         slug = encodeURIComponent(slug);
 
         request(`/wiki/${slug}`).end((err, res) => {
             if (err) {
-                this.setState({ ...this.state, page: undefined, error: err });
+                this.setState({ ...this.state, page: undefined, error: err, isLoadingPage: false });
                 return;
             }
 
             const page = res.body;
-            this.setState({ ...this.state, page, error: undefined });
+            this.setState({ ...this.state, page, error: undefined, isLoadingPage: false });
         });
     }
 }

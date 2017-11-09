@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import * as marked from "marked";
 import * as highlight from "highlight.js";
+import { highlightAuto } from "highlight.js";
 
 @injectable()
 export class MarkdownParserService {
@@ -40,6 +41,10 @@ export class MarkdownParserService {
                 ].join(""),
                 `</h${level}>`
             ].join("");
+        };
+
+        renderer.codespan = (code) => {
+            return `<code class="inline-code-block">${code}</code>`;
         };
 
         renderer.code = (code, language) => {
