@@ -1,18 +1,17 @@
 import * as React from "react";
 import * as request from "superagent";
 import { Staticless as Config } from "../models/config";
-import { Staticless as GitLab } from "../models/gitlab";
 import { HeaderComponent } from "./HeaderComponent";
 import { NavComponent } from "./NavComponent";
 import { PageComponent } from "./PageComponent";
 import { LoadingComponent } from "./LoadingComponent";
 
 export interface IAppComponentState {
-    page?: GitLab.GitLab.IWikiPage;
     config?: Config.Config.Frontend;
     error?: any;
+    slug?: string;
     isMenuOpen: boolean;
-    isLoadingPage: boolean;
+    isLoadingConfig: boolean;
 }
 
 export class AppComponent extends React.Component<any, IAppComponentState> {
@@ -26,16 +25,16 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
         const isOpenValue = localStorage[this.STORE_MENU_OPEN];
         const isOpen = isOpenValue === "true";
 
-        this.state = { isMenuOpen: isOpen, isLoadingPage: false };
+        this.state = { isMenuOpen: isOpen, isLoadingConfig: false };
     }
 
     public componentDidMount() {
         window.onpopstate = (event) => {
-            this.fetchPageUsingLocation();
+            this.updateStateUsingLocation();
         };
 
         this.fetchConfig();
-        this.fetchPageUsingLocation();
+        this.updateStateUsingLocation();
     }
 
     public render() {
@@ -54,12 +53,12 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
     }
 
     private renderContent() {
-        if (this.state.isLoadingPage) {
+        if (this.state.isLoadingConfig) {
             return <LoadingComponent />;
-        } else if (this.state.page) {
-            return <PageComponent content={this.state.page.content} />;
         } else if (this.state.error) {
             return <div>{this.state.error.toString()}</div>;
+        } else if (this.state.slug) {
+            return <PageComponent slug={this.state.slug} />;
         } else {
             return <div></div>;
         }
@@ -74,13 +73,13 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
     private handleNavigateToPage(slug: string) {
         const url = `${window.location.origin}/${slug}`;
         window.history.pushState(slug, slug, url);
-        this.fetchPage(slug);
+        this.setState({ ...this.state, slug });
     }
 
     private fetchConfig() {
         request("/frontendConfig").end((err, res) => {
             if (err) {
-                this.setState({ ...this.state, page: undefined, error: err });
+                this.setState({ ...this.state, error: err });
                 return;
             }
 
@@ -91,27 +90,11 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
         });
     }
 
-    private fetchPageUsingLocation() {
+    private updateStateUsingLocation() {
         const slug = window.location.pathname.substr(1);
 
         if (slug.length > 0) {
-            this.fetchPage(slug);
+            this.setState({ ...this.state, slug });
         }
-    }
-
-    private fetchPage(slug: string) {
-        this.setState({ ...this.state, isLoadingPage: true });
-
-        slug = encodeURIComponent(slug);
-
-        request(`/wiki/${slug}`).end((err, res) => {
-            if (err) {
-                this.setState({ ...this.state, page: undefined, error: err, isLoadingPage: false });
-                return;
-            }
-
-            const page = res.body;
-            this.setState({ ...this.state, page, error: undefined, isLoadingPage: false });
-        });
     }
 }
