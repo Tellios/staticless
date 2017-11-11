@@ -15,59 +15,34 @@ export function configureRouting(hapiServer: HapiServer, controllers: BaseContro
 }
 
 function configureClientRoutes(hapiServer: HapiServer) {
-    hapiServer.route({
-        handler: {
-            file: path.join(process.cwd(), "client", "index.html")
-        },
-        method: "GET",
-        path: "/{path*}"
-    });
-
     const clientFiles = readdirSync(path.join(process.cwd(), "client"));
 
-    for (const file of clientFiles) {
-        if (!file.endsWith("index.html")) {
-            hapiServer.route({
+    hapiServer.route(getFileRoutes(clientFiles));
+    hapiServer.route(getFallbackRoute());
+}
+
+function getFileRoutes(files: string[]): RouteConfiguration[] {
+    return files
+        .filter((file: string) => !file.endsWith("index.html"))
+        .map((file: string): RouteConfiguration => {
+            return {
                 handler: {
                     file: path.join(process.cwd(), "client", file)
                 },
                 method: "GET",
                 path: `/${file}`
-            });
-        }
-    }
+            };
+        });
+}
 
-    // hapiServer.route({
-    //     handler: {
-    //         file: path.join(process.cwd(), "client", "app.js")
-    //     },
-    //     method: "GET",
-    //     path: "/app.js"
-    // });
-
-    // hapiServer.route({
-    //     handler: {
-    //         file: path.join(process.cwd(), "client", "app.css")
-    //     },
-    //     method: "GET",
-    //     path: "/app.css"
-    // });
-
-    // hapiServer.route({
-    //     handler: {
-    //         file: path.join(process.cwd(), "client", "code-block-styles.css")
-    //     },
-    //     method: "GET",
-    //     path: "/code-block-styles.css"
-    // });
-
-    // hapiServer.route({
-    //     handler: {
-    //         file: path.join(process.cwd(), "client", "favicon.ico")
-    //     },
-    //     method: "GET",
-    //     path: "/favicon.ico"
-    // });
+function getFallbackRoute(): RouteConfiguration {
+    return {
+        handler: {
+            file: path.join(process.cwd(), "client", "index.html")
+        },
+        method: "GET",
+        path: "/{path*}"
+    };
 }
 
 function configureControllerRoutes(hapiServer: HapiServer, controllers: BaseController[]) {
