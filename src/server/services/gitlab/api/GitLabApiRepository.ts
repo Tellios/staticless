@@ -6,20 +6,27 @@ import { Config } from "../../../Config";
 export class GitLabApiRepository {
     constructor(private config: Config) { }
 
+    public async getUploadedFile(fileId: string, filename: string): Promise<any[]> {
+        const config = this.config.get();
+        const path = `${config.gitlab.projectPath}/uploads/${fileId}/${filename}`;
+
+        return await this.performRequest(this.getUrl(path), (url) => request.get(url))
+            .then((response) => response.body);
+    }
+
     public async get(path: string, query?: {}): Promise<request.Response> {
         return await this.performRequest(
-            path,
+            this.getUrl(`api/v4/${path}`),
             (url) => request.get(url),
             query
         );
     }
 
     private performRequest(
-        path: string,
+        url: string,
         requestFactory: (url: string) => request.SuperAgentRequest,
         query?: {}
     ): Promise<request.Response> {
-        const url = this.getUrl(path);
         const req = requestFactory(url)
             .set("PRIVATE-TOKEN", this.config.get().gitlab.apiToken)
             .accept("application/json");
@@ -34,13 +41,11 @@ export class GitLabApiRepository {
     private getUrl(path: string) {
         const url = this.config.get().gitlab.url;
 
-        const u = `${url}/api/v4/${path}`
+        return `${url}/${path}`
             // Remove any duplicate slashes due to user config input
             .replace(/\/\//g, "/")
             // Make sure that the protocol at the start of the url is correctly
             // terminated with a double slash
             .replace("/", "//");
-
-        return u;
     }
 }

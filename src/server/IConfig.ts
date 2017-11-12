@@ -7,5 +7,6 @@ export interface IConfig {
         url: string;
         apiToken: string;
         projectId: string;
+        projectPath: string;
     };
 }
