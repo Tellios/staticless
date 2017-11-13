@@ -38,7 +38,8 @@ module.exports = {
             { from: "./src/client/app.css" },
             { from: "./src/client/favicon.ico" },
             { from: "./config.json", to: "../config.json" },
-            { from: "./node_modules/highlight.js/styles/androidstudio.css", to: "code-block-styles.css" }
+            { from: "./node_modules/highlight.js/styles/atom-one-dark.css", to: "code-block-styles/dark.css" },
+            { from: "./node_modules/highlight.js/styles/atom-one-light.css", to: "code-block-styles/light.css" }
         ])
     ]
 }

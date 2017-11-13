@@ -16,6 +16,8 @@ export class HeaderComponent extends React.Component<IHeaderProps> {
                     </span>
                     {this.props.title}
                 </h1>
+
+                <span className="material-icons app-header-config-button">settings</span>
             </div>
         );
     }

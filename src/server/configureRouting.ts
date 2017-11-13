@@ -6,6 +6,7 @@ import { Container } from "inversify";
 import * as path from "path";
 import * as process from "process";
 import { readdirSync } from "fs-extra";
+import * as klaw from "klaw-sync";
 import * as url from "url";
 import { BaseController } from "./controllers/base/BaseController";
 
@@ -15,30 +16,36 @@ export function configureRouting(hapiServer: HapiServer, controllers: BaseContro
 }
 
 function configureClientRoutes(hapiServer: HapiServer) {
-    const clientFiles = readdirSync(path.join(process.cwd(), "client"));
+    const clientDir = path.join(process.cwd(), "client");
+    const clientFiles = klaw(clientDir, { nodir: true })
+        .map((file) => file.path);
 
-    hapiServer.route(getFileRoutes(clientFiles));
-    hapiServer.route(getFallbackRoute());
+    hapiServer.route(getFileRoutes(clientDir, clientFiles));
+    hapiServer.route(getFallbackRoute(clientDir));
 }
 
-function getFileRoutes(files: string[]): RouteConfiguration[] {
+function getFileRoutes(clientDir: string, files: string[]): RouteConfiguration[] {
     return files
         .filter((file: string) => !file.endsWith("index.html"))
         .map((file: string): RouteConfiguration => {
+            const fileWebPath =
+                file.substring(clientDir.length)
+                .replace(/\\/g, "/");
+
             return {
                 handler: {
-                    file: path.join(process.cwd(), "client", file)
+                    file
                 },
                 method: "GET",
-                path: `/${file}`
+                path: fileWebPath
             };
         });
 }
 
-function getFallbackRoute(): RouteConfiguration {
+function getFallbackRoute(clientDir: string): RouteConfiguration {
     return {
         handler: {
-            file: path.join(process.cwd(), "client", "index.html")
+            file: path.join(clientDir, "index.html")
         },
         method: "GET",
         path: "/{path*}"
