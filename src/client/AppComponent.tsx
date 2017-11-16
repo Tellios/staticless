@@ -1,16 +1,17 @@
 import * as React from "react";
 import * as request from "superagent";
-import { Staticless as Config } from "../models/config";
 import { HeaderComponent } from "./HeaderComponent";
 import { NavContainer } from "./nav/NavContainer";
 import { PageContainer } from "./page/PageContainer";
-import { LoadingComponent } from "./LoadingComponent";
+import { SettingsContainer } from "./settings/SettingsContainer";
+import { LoadingComponent } from "./components/LoadingComponent";
 
 export interface IAppComponentState {
-    config?: Config.Config.Frontend;
+    config?: Staticless.Config.Frontend;
     error?: any;
     slug?: string;
     isMenuOpen: boolean;
+    isSettingsOpen: boolean;
     isLoadingConfig: boolean;
 }
 
@@ -20,12 +21,14 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
     constructor(props: any) {
         super(props);
         this.handleMenuClick = this.handleMenuClick.bind(this);
+        this.handleSettingsOpen = this.handleSettingsOpen.bind(this);
+        this.handleSettingsClose = this.handleSettingsClose.bind(this);
         this.handleNavigateToPage = this.handleNavigateToPage.bind(this);
 
         const isOpenValue = localStorage[this.STORE_MENU_OPEN];
         const isOpen = isOpenValue === "true";
 
-        this.state = { isMenuOpen: isOpen, isLoadingConfig: false };
+        this.state = { isMenuOpen: isOpen, isSettingsOpen: false, isLoadingConfig: false };
     }
 
     public componentDidMount() {
@@ -42,12 +45,20 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
             <div className="app-root">
                 {
                     this.state.config
-                    && <HeaderComponent title={this.state.config.title} onMenuClick={this.handleMenuClick} />
+                    && <HeaderComponent
+                            title={this.state.config.title}
+                            onMenuClick={this.handleMenuClick}
+                            onSettingsClick={this.handleSettingsOpen}
+                        />
                 }
                 <div className="app-container">
                     <NavContainer onNavigateToPage={this.handleNavigateToPage} isOpen={this.state.isMenuOpen} />
                     {this.renderContent()}
                 </div>
+                {
+                    this.state.isSettingsOpen
+                    && <SettingsContainer onClose={this.handleSettingsClose} />
+                }
             </div>
         );
     }
@@ -67,24 +78,31 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
     private handleMenuClick() {
         const isOpen = !this.state.isMenuOpen;
         localStorage.setItem(this.STORE_MENU_OPEN, String(isOpen));
-        this.setState({ ...this.state, isMenuOpen: isOpen });
+        this.setState({ isMenuOpen: isOpen });
+    }
+
+    private handleSettingsOpen() {
+        this.setState({ isSettingsOpen: true });
+    }
+
+    private handleSettingsClose() {
+        this.setState({ isSettingsOpen: false });
     }
 
     private handleNavigateToPage(slug: string) {
         const url = `${window.location.origin}/${slug}`;
         window.history.pushState(slug, slug, url);
-        this.setState({ ...this.state, slug });
+        this.setState({ slug });
     }
 
     private fetchConfig() {
         request("/frontendConfig").end((err, res) => {
             if (err) {
-                this.setState({ ...this.state, error: err });
+                this.setState({ error: err });
                 return;
             }
 
             this.setState({
-                ...this.state,
                 config: res.body
             });
         });
@@ -94,7 +112,7 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
         const slug = window.location.pathname.substr(1);
 
         if (slug.length > 0) {
-            this.setState({ ...this.state, slug });
+            this.setState({ slug });
         }
     }
 }

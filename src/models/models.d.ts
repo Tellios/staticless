@@ -1,4 +1,4 @@
-export namespace Staticless {
+declare namespace Staticless {
     namespace GitLab {
         interface IWikiPage {
             content: string;
@@ -22,6 +22,12 @@ export namespace Staticless {
             slugPart: string;
             title: string;
             page: IWikiPageItem | null;
+        }
+    }
+
+    namespace Config {
+        interface Frontend {
+            title: string;
         }
     }
 }

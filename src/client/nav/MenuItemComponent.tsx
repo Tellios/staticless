@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Staticless } from "../../models/gitlab";
 
 export interface IMenuItemProps {
     menuItem: Staticless.GitLab.IWikiPageTreeItem;

@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Staticless } from "../../models/gitlab";
-import { LoadingComponent } from "../LoadingComponent";
+import { LoadingComponent } from "../components/LoadingComponent";
 import { MenuItemComponent } from "./MenuItemComponent";
 
 export interface INavComponentProps {

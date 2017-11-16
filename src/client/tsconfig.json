@@ -18,7 +18,8 @@
         ]
     },
     "include": [
-        "src/client/**/*",
-        "src/models/**/*"
+        "./**/*.ts",
+        "./**/*.tsx",
+        "../models/**/*.ts"
     ]
 }

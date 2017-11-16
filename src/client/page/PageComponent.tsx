@@ -1,5 +1,5 @@
 import * as React from "react";
-import { LoadingComponent } from "../LoadingComponent";
+import { LoadingComponent } from "../components/LoadingComponent";
 
 export interface IPageComponentProps {
     isLoading: boolean;

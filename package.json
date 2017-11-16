@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/Tellios/staticless#readme",
   "devDependencies": {
+    "@types/classnames": "^2.2.3",
     "@types/fs-extra": "^4.0.2",
     "@types/hapi": "^16.1.10",
     "@types/highlight.js": "^9.1.10",
@@ -47,6 +48,7 @@
     "webpack": "^3.6.0"
   },
   "dependencies": {
+    "classnames": "^2.2.5",
     "fs-extra": "^4.0.2",
     "hapi": "^16.6.2",
     "hapi-async-handler": "^1.0.3",

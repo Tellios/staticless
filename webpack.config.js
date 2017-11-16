@@ -23,7 +23,7 @@ module.exports = {
                     {
                         loader: "awesome-typescript-loader",
                         options: {
-                            configFileName: "tsconfig.client.json"
+                            configFileName: "./src/client/tsconfig.json"
                         }
                     }
                 ],

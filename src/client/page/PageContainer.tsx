@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as request from "superagent";
-import { Staticless as GitLab } from "../../models/gitlab";
-import { LoadingComponent } from "../LoadingComponent";
+import { LoadingComponent } from "../components/LoadingComponent";
 import { PageComponent } from "./PageComponent";
 
 export interface IPageContainerProps {
@@ -9,7 +8,7 @@ export interface IPageContainerProps {
 }
 
 export interface IPageComponentState {
-    page?: GitLab.GitLab.IWikiPage;
+    page?: Staticless.GitLab.IWikiPage;
     error?: any;
     isLoadingPage: boolean;
 }
@@ -49,18 +48,18 @@ export class PageContainer extends React.Component<IPageContainerProps, IPageCom
     }
 
     private fetchPage(slug: string) {
-        this.setState({ ...this.state, isLoadingPage: true });
+        this.setState({ isLoadingPage: true });
 
         slug = encodeURIComponent(slug);
 
         request(`/wiki/${slug}`).end((err, res) => {
             if (err) {
-                this.setState({ ...this.state, page: undefined, error: err, isLoadingPage: false });
+                this.setState({ page: undefined, error: err, isLoadingPage: false });
                 return;
             }
 
             const page = res.body;
-            this.setState({ ...this.state, page, error: undefined, isLoadingPage: false });
+            this.setState({ page, error: undefined, isLoadingPage: false });
         });
     }
 }

@@ -1,6 +1,5 @@
 import { upperFirst } from "lodash";
 import { injectable } from "inversify";
-import { Staticless } from "../../../../models/gitlab.d";
 import { Config } from "../../../Config";
 import * as request from "superagent";
 import * as stream from "stream";

@@ -42,7 +42,6 @@ body,
 
 .app-header-config-button {
     color: white;
-    cursor: pointer;
 
     margin-left: auto;
     margin-right: 0;
@@ -73,7 +72,6 @@ body,
 }
 
 .nav-container-open {
-    height: 100%;
     border-right: 1px solid silver;
 
     width: 400px;
@@ -161,6 +159,103 @@ body,
 
 @keyframes loading-animation {
     100% { transform: rotate(360deg); }
+}
+
+.icon-button-component {
+    display: -webkit-flex;
+    display: flex;
+
+    cursor: pointer;
+}
+
+.form-label {
+    padding: 4px;
+    margin: 4px;
+}
+
+.form-input {
+    padding: 4px;
+    margin: 4px;
+}
+
+.modal-container {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    
+    animation-name: modal-container-fade-in;
+    animation-duration: 0.2s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes modal-container-fade-in {
+    from { background-color: rgba(0, 0, 0, 0.0); }
+    to { background-color: rgba(0, 0, 0, 0.4); }
+}
+
+.modal {
+    background-color: #fefefe;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15%;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 60%;
+
+    animation-name: modal-drop-in;
+    animation-duration: 0.2s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes modal-drop-in {
+    from { margin-top: 0; }
+    to { margin-top: 15%; }
+}
+
+.modal-header {
+    background-color: #007ac1;
+    color: white;
+    border-bottom: 2px solid #777;
+    padding: 20px;
+    font-size: 24px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.modal-content {
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.modal-button-row {
+    display: -webkit-flex;
+    display: flex;
+
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+
+    justify-content: flex-end;
+}
+
+.modal-button {
+    font-size: 32px;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.modal-ok-button {
+    color: #4caf50;
+}
+
+.modal-cancel-button {
+    color: #f44336;
 }
 
 .anchored-header:hover > .anchor {

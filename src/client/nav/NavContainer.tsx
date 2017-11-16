@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as request from "superagent";
-import { Staticless } from "../../models/gitlab";
 import { NavComponent } from "./NavComponent";
 
 export interface INavProps {

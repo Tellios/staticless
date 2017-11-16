@@ -1,8 +1,10 @@
 import * as React from "react";
+import { IconButtonComponent } from "./components/IconButtonComponent";
 
 export interface IHeaderProps {
     title: string;
     onMenuClick(): void;
+    onSettingsClick(): void;
 }
 
 export class HeaderComponent extends React.Component<IHeaderProps> {
@@ -17,7 +19,11 @@ export class HeaderComponent extends React.Component<IHeaderProps> {
                     {this.props.title}
                 </h1>
 
-                <span className="material-icons app-header-config-button">settings</span>
+                <IconButtonComponent
+                    className="app-header-config-button"
+                    icon="settings"
+                    onClick={this.props.onSettingsClick}
+                />
             </div>
         );
     }
