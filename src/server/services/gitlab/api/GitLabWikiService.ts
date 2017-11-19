@@ -120,21 +120,20 @@ export class GitLabWikiService {
         for (let i = 0; i < slugParts.length; i++) {
             const slug = slugParts.slice(0, i + 1).join("/");
             const part = slugParts[i];
-            const title = upperFirst(page.title);
 
             if (i === endIndex) {
                 tree.push({
                     children: [],
                     page,
                     slugPart: slug,
-                    title
+                    title: upperFirst(page.title)
                 });
             } else {
                 const node = {
                     children: [],
                     page: null,
                     slugPart: slug,
-                    title
+                    title: upperFirst(part)
                 };
                 tree.push(node);
                 tree = node.children;

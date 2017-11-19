@@ -1,17 +1,13 @@
 import * as React from "react";
 import { SettingsComponent } from "./SettingsComponent";
+import { settingsRepository } from "./SettingsRepository";
+import { themeLoader } from "./ThemeLoader";
 
 export interface ISettingsContainerProps {
     onClose(): void;
 }
 
 export class SettingsContainer extends React.Component<ISettingsContainerProps, Client.ISettings> {
-    private readonly STORAGE_KEY = "staticless-settings";
-
-    private readonly defaultSettings: Client.ISettings = {
-        codeTheme: "dark"
-    };
-
     constructor(props: ISettingsContainerProps) {
         super();
 
@@ -19,7 +15,7 @@ export class SettingsContainer extends React.Component<ISettingsContainerProps, 
         this.handleCancel = this.handleCancel.bind(this);
         this.handleCodeThemeSelected = this.handleCodeThemeSelected.bind(this);
 
-        this.state = this.getSettings();
+        this.state = settingsRepository.get();
     }
 
     public render() {
@@ -34,7 +30,8 @@ export class SettingsContainer extends React.Component<ISettingsContainerProps, 
     }
 
     private handleSave() {
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.state));
+        settingsRepository.set(this.state);
+        themeLoader.loadTheme(this.state.codeTheme);
         this.props.onClose();
     }
 
@@ -48,15 +45,5 @@ export class SettingsContainer extends React.Component<ISettingsContainerProps, 
                 codeTheme: value
             };
         });
-    }
-
-    private getSettings() {
-        const settings = localStorage.getItem(this.STORAGE_KEY) as string | null;
-
-        if (settings == null) {
-            return { ...this.defaultSettings };
-        }
-
-        return JSON.parse(settings) as Client.ISettings;
     }
 }

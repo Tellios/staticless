@@ -26,8 +26,12 @@ export class SettingsComponent extends React.Component<ISettingsComponentProps> 
                             className="form-input"
                             onChange={(e) => this.props.onCodeThemeSelected(e.target.value as Client.CodeTheme)}
                         >
-                            <option value="light">Light</option>
-                            <option value="dark">Dark</option>
+                            <option value="atom-one-dark">Atom One Dark</option>
+                            <option value="atom-one-light">Atom One Light</option>
+                            <option value="monokai">Monokai</option>
+                            <option value="solarized-dark">Solarized Dark</option>
+                            <option value="solarized-light">Solarized Light</option>
+                            <option value="tomorrow">Tomorrow</option>
                         </select>
                     </div>
                 </div>

@@ -96,6 +96,8 @@ body,
     padding-left: 20px;
     padding-right: 20px;
 
+    overflow-y: auto;
+
     width: 100%;
     
     background-color: white;

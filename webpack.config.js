@@ -38,8 +38,12 @@ module.exports = {
             { from: "./src/client/app.css" },
             { from: "./src/client/favicon.ico" },
             { from: "./config.json", to: "../config.json" },
-            { from: "./node_modules/highlight.js/styles/atom-one-dark.css", to: "code-block-styles/dark.css" },
-            { from: "./node_modules/highlight.js/styles/atom-one-light.css", to: "code-block-styles/light.css" }
+            { from: "./node_modules/highlight.js/styles/atom-one-dark.css", to: "code-block-styles/atom-one-dark.css" },
+            { from: "./node_modules/highlight.js/styles/atom-one-light.css", to: "code-block-styles/atom-one-light.css" },
+            { from: "./node_modules/highlight.js/styles/monokai.css", to: "code-block-styles/monokai.css" },
+            { from: "./node_modules/highlight.js/styles/solarized-dark.css", to: "code-block-styles/solarized-dark.css" },
+            { from: "./node_modules/highlight.js/styles/solarized-light.css", to: "code-block-styles/solarized-light.css" },
+            { from: "./node_modules/highlight.js/styles/tomorrow.css", to: "code-block-styles/tomorrow.css" }
         ])
     ]
 }

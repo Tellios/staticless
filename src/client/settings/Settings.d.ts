@@ -1,5 +1,11 @@
 declare namespace Client {
-    type CodeTheme = "light" | "dark";
+    type CodeTheme =
+        "atom-one-dark"
+        | "atom-one-light"
+        | "monokai"
+        | "solarized-dark"
+        | "solarized-light"
+        | "tomorrow";
 
     interface ISettings {
         codeTheme: CodeTheme;
