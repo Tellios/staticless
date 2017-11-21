@@ -6,16 +6,18 @@ export interface IPageComponentProps {
     content?: string;
 }
 
-export const PageComponent = (props: IPageComponentProps) => {
-    if (props.isLoading) {
-        return <LoadingComponent />;
-    } else if (!props.content) {
-        return <div className="wiki-container"></div>;
-    }
+export class PageComponent extends React.PureComponent<IPageComponentProps> {
+    public render() {
+        if (this.props.isLoading) {
+            return <LoadingComponent />;
+        } else if (!this.props.content) {
+            return <div className="wiki-container"></div>;
+        }
 
-    return (
-        <div className="wiki-container">
-            <div dangerouslySetInnerHTML={{ __html: props.content }}></div>
-        </div>
-    );
-};
+        return (
+            <div className="wiki-container">
+                <div dangerouslySetInnerHTML={{ __html: this.props.content }}></div>
+            </div>
+        );
+    }
+}

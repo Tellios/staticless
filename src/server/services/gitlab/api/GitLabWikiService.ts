@@ -3,16 +3,28 @@ import { injectable } from "inversify";
 import { Config } from "../../../Config";
 import { MarkdownParserService } from "../../markdown/MarkdownParserService";
 import { GitLabApiRepository } from "./GitLabApiRepository";
+import { CacheService } from "../../CacheService";
 
 @injectable()
 export class GitLabWikiService {
     constructor(
         private config: Config,
         private api: GitLabApiRepository,
-        private markdown: MarkdownParserService
-    ) { }
+        private markdown: MarkdownParserService,
+        private pageTreeCache: CacheService<string, Staticless.GitLab.IWikiPageTreeItem[]>,
+        private pageCache: CacheService<string, Staticless.GitLab.IWikiPage>
+    ) {
+        this.pageTreeCache.initialize(30);
+        this.pageCache.initialize(30);
+    }
 
     public async getPageList(): Promise<Staticless.GitLab.IWikiPageTreeItem[]> {
+        let pageTree = this.pageTreeCache.get("tree");
+
+        if (pageTree) {
+            return pageTree;
+        }
+
         const path = this.getWikiApiPath();
         const response = await this.api.get(path, { with_content: 0 });
 
@@ -24,17 +36,27 @@ export class GitLabWikiService {
                 return pageItem.format === "markdown";
             });
 
-        return this.createPageTree(pages);
+        pageTree = this.createPageTree(pages);
+        this.pageTreeCache.set("tree", pageTree);
+
+        return pageTree;
     }
 
     public async getPage(slug: string): Promise<Staticless.GitLab.IWikiPage> {
+        let page = this.pageCache.get(slug);
+
+        if (page) {
+            return page;
+        }
+
         let path = this.getWikiApiPath();
         path += `/${encodeURIComponent(slug)}`;
 
         const response = await this.api.get(path);
-        const page = response.body as Staticless.GitLab.IWikiPage;
-
+        page = response.body as Staticless.GitLab.IWikiPage;
         page.content = await this.markdown.parse(page.content);
+
+        this.pageCache.set(slug, page);
 
         return page;
     }

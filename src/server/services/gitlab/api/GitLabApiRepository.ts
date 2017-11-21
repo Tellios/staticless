@@ -6,9 +6,8 @@ import { Config } from "../../../Config";
 export class GitLabApiRepository {
     constructor(private config: Config) { }
 
-    public async getUploadedFile(fileId: string, filename: string): Promise<any[]> {
-        const config = this.config.get();
-        const path = `${config.gitlab.projectPath}/uploads/${fileId}/${filename}`;
+    public async getUploadedFile(projectPath: string, fileId: string, filename: string): Promise<any[]> {
+        const path = `${projectPath}/uploads/${fileId}/${filename}`;
 
         return await this.performRequest(this.getUrl(path), (url) => request.get(url))
             .then((response) => response.body);
