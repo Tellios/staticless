@@ -156,7 +156,7 @@ body,
 .loading-icon {
     color: #007ac1;
     font-size: 48px;
-    animation: loading-animation 2000ms linear infinite;
+    animation: loading-animation 1200ms linear infinite;
 }
 
 @keyframes loading-animation {
@@ -205,7 +205,7 @@ body,
     margin-right: auto;
     margin-bottom: 15%;
     border: 1px solid #888;
-    border-radius: 10px;
+    border-radius: 6px;
     width: 60%;
 
     animation-name: modal-drop-in;
@@ -224,8 +224,8 @@ body,
     border-bottom: 2px solid #777;
     padding: 20px;
     font-size: 24px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
 }
 
 .modal-content {
