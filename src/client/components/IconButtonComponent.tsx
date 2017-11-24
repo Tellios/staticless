@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as classNames from "classnames";
+import * as styles from "./IconButtonComponent.css";
 
 export interface IIconButtonComponent {
     icon: string;
@@ -14,7 +15,7 @@ export class IconButtonComponent extends React.Component<IIconButtonComponent> {
     }
 
     public render() {
-        const className = classNames(this.props.className, "icon-button-component");
+        const className = classNames(this.props.className, styles.IconButtonComponent);
         const iconClassName = classNames("material-icons", this.props.iconClassName);
 
         return (

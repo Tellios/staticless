@@ -1,0 +1,41 @@
+@value primary from '../colors.css';
+
+.MenuItemIcon {
+    cursor: pointer;
+}
+
+.MenuItemIcon:hover {
+    color: primary;
+}
+
+.MenuItemLabel {
+    display: flex;
+
+    flex-direction: row;
+    align-items: center;
+
+    margin-top: 5px;
+}
+
+.MenuItemLabelText {
+    cursor: pointer;
+}
+
+.MenuItemLabelText:hover {
+    color: primary;
+}
+
+.MenuItemLabelTextSelected {
+    color: primary;
+}
+
+.MenuItemChildren {
+    display: flex;
+
+    flex-direction: column;
+    margin-left: 15px;
+}
+
+.MenuItemChild {
+    margin-left: 9px;
+}

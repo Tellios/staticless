@@ -1,6 +1,8 @@
 import * as React from "react";
+import * as classNames from "classnames";
 import { LoadingComponent } from "../components/LoadingComponent";
 import { MenuItemComponent } from "./MenuItemComponent";
+import * as styles from "./NavComponent.css";
 
 export interface INavComponentProps {
     pages: Staticless.GitLab.IWikiPageTreeItem[];
@@ -11,10 +13,13 @@ export interface INavComponentProps {
 
 export class NavComponent extends React.Component<INavComponentProps> {
     public render() {
-        const className = [
-            "nav-container",
-            this.props.isOpen ? "nav-container-open" : "nav-container-closed"
-        ].join(" ");
+        const className = classNames(
+            styles.Container,
+            {
+                [styles.ContainerOpen]: this.props.isOpen,
+                [styles.ContainerClosed]: !this.props.isOpen
+            }
+        );
 
         return (
             <nav className={className}>

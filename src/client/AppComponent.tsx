@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as request from "superagent";
-import { HeaderComponent } from "./HeaderComponent";
+import * as styles from "./AppComponent.css";
+import { HeaderComponent } from "./header/HeaderComponent";
 import { NavContainer } from "./nav/NavContainer";
 import { PageContainer } from "./page/PageContainer";
 import { SettingsContainer } from "./settings/SettingsContainer";
@@ -42,7 +43,7 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
 
     public render() {
         return (
-            <div className="app-root">
+            <div className={styles.Root}>
                 {
                     this.state.config
                     && <HeaderComponent
@@ -51,7 +52,7 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
                             onSettingsClick={this.handleSettingsOpen}
                         />
                 }
-                <div className="app-container">
+                <div className={styles.Container}>
                     <NavContainer onNavigateToPage={this.handleNavigateToPage} isOpen={this.state.isMenuOpen} />
                     {this.renderContent()}
                 </div>

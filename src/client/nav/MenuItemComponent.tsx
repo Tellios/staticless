@@ -1,4 +1,6 @@
 import * as React from "react";
+import * as classNames from "classnames";
+import * as styles from "./MenuItemComponent.css";
 
 export interface IMenuItemProps {
     menuItem: Staticless.GitLab.IWikiPageTreeItem;
@@ -19,17 +21,17 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
     }
 
     public render(): any {
-        const labelClassName = [
-            "menu-item-label-text",
-            this.isSelected(this.props.menuItem) ? "menu-item-label-text-selected" : ""
-        ].join(" ");
+        const labelClassName = classNames(
+            styles.MenuItemLabelText,
+            { [styles.MenuItemLabelTextSelected]: this.isSelected(this.props.menuItem) }
+        );
 
         return (
-            <div className="menu-item">
-                <div className="menu-item-label">
+            <div className={styles.MenuItem}>
+                <div className={styles.MenuItemLabel}>
                     {this.props.menuItem.children.length > 0
                         && <span
-                            className="material-icons menu-item-icon"
+                            className={classNames("material-icons", styles.MenuItemIcon)}
                             onClick={this.handleFolderClick}>{this.getIcon()}
                         </span>}
 
@@ -47,12 +49,12 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
 
     private renderChildren() {
         return (
-            <div className="menu-item-children">
+            <div className={styles.MenuItemChildren}>
                 {
                     this.props.menuItem.children.map((child: Staticless.GitLab.IWikiPageTreeItem, index: number) => {
                         const key = `${index}-${child.slugPart}`;
                         return (
-                            <div className="menu-item-child" key={key}>
+                            <div className={styles.MenuItemChild} key={key}>
                                 <MenuItemComponent menuItem={child} onClick={this.props.onClick} />
                             </div>
                         );

@@ -1,0 +1,20 @@
+@value grey-light from './colors.css';
+
+.Root {
+    display: flex;
+
+    flex-direction: column;
+
+    height: 100%;
+}
+
+.Container {
+    display: flex;
+
+    flex-direction: row;
+
+    height: 100%;
+    min-width: 800px;
+
+    background-color: grey-light;
+}

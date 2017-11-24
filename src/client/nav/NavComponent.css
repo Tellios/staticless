@@ -1,0 +1,23 @@
+@value grey from '../colors.css';
+@value grey-light from '../colors.css';
+
+.Container {
+    position: relative;
+    background-color: grey-light;
+}
+
+.ContainerOpen {
+    border-right: 1px solid grey;
+
+    width: 400px;
+    left: 0px;
+    padding: 20px;
+
+    transition: width 0.2s ease-out;
+}
+
+.ContainerClosed {
+    left: -400px;
+    width: 0;
+    transition: width 0.2s ease-out;
+}

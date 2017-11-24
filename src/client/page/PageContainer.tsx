@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as request from "superagent";
+import * as styles from "./PageContainer.css";
 import { LoadingComponent } from "../components/LoadingComponent";
 import { PageComponent } from "./PageComponent";
 
@@ -31,7 +32,7 @@ export class PageContainer extends React.Component<IPageContainerProps, IPageCom
 
     public render() {
         return (
-            <div className="wiki-content">
+            <div className={styles.WikiContent}>
                 {this.renderContent()}
             </div>
         );

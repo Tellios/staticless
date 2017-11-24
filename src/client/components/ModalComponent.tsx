@@ -1,4 +1,6 @@
 import * as React from "react";
+import * as classNames from "classnames";
+import * as styles from "./ModalComponent.css";
 import { IconButtonComponent } from "./IconButtonComponent";
 import { KeyboardEvent } from "react";
 
@@ -16,20 +18,20 @@ export class ModalComponent extends React.Component<IModalComponentProps> {
 
     public render() {
         return (
-            <div className="modal-container" onKeyDown={this.onKeyDown}>
-                <div className="modal">
-                    <div className="modal-header">
+            <div className={styles.Container} onKeyDown={this.onKeyDown}>
+                <div className={styles.Modal}>
+                    <div className={styles.Header}>
                         {this.props.title}
                     </div>
-                    <div className="modal-content">{this.props.children}</div>
-                    <div className="modal-button-row">
+                    <div className={styles.Content}>{this.props.children}</div>
+                    <div className={styles.ButtonRow}>
                         <IconButtonComponent
-                            iconClassName="modal-button modal-ok-button"
+                            iconClassName={classNames(styles.Button, styles.OkButton)}
                             icon="check_circle"
                             onClick={() => this.props.onAction("OK")}
                         />
                         <IconButtonComponent
-                            iconClassName="modal-button modal-cancel-button"
+                            iconClassName={classNames(styles.Button, styles.CancelButton)}
                             icon="cancel"
                             onClick={() => this.props.onAction("Cancel")}
                         />
@@ -40,7 +42,6 @@ export class ModalComponent extends React.Component<IModalComponentProps> {
     }
 
     private onKeyDown(e: KeyboardEvent<HTMLDivElement>) {
-        console.log(e);
         if (e.key === "escape") {
             this.props.onAction("Cancel");
         }

@@ -28,6 +28,23 @@ module.exports = {
                     }
                 ],
                 exclude: /node_modules/
+            },
+            {
+                test: /\.css$/,
+                exclude: /node_modules/,
+                use: [
+                    { loader: "style-loader" },
+                    {
+                        loader: "css-loader",
+                        options: {
+                            modules: true,
+                            namedExport: true,
+                            importLoaders: 2,
+                            localIdentName: "[local]__[hash:base64:5]"
+                        }
+                    },
+                    { loader: "postcss-loader" }
+                ]
             }
         ]
     },
