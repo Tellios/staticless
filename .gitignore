@@ -36,7 +36,7 @@ build/Release
 dist
 
 # Development config
-config.json
+staticless.json
 
 # Dependency directories
 node_modules/
