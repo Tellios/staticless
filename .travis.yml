@@ -9,3 +9,4 @@ services:
 script:
   - npm run build:prod
   - npm prune --production
+  - docker build -t staticless .
