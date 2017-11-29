@@ -8,7 +8,7 @@ import { SettingsContainer } from "./settings/SettingsContainer";
 import { LoadingComponent } from "./components/LoadingComponent";
 
 export interface IAppComponentState {
-    config?: Staticless.Config.Frontend;
+    config?: Staticless.Config.IFrontend;
     error?: any;
     slug?: string;
     isMenuOpen: boolean;
