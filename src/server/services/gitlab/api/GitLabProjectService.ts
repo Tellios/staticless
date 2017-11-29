@@ -7,12 +7,12 @@ import { CacheService } from "../../CacheService";
 export class GitLabProjectService {
     constructor(
         private api: GitLabApiRepository,
-        private cacheService: CacheService<string, GitLabApi.Project>
+        private cacheService: CacheService<string, GitLabApi.IProject>
     ) {
         this.cacheService.initialize(30);
     }
 
-    public async getProject(projectId: string): Promise<GitLabApi.Project> {
+    public async getProject(projectId: string): Promise<GitLabApi.IProject> {
         const project = this.cacheService.get(projectId);
 
         if (project) {

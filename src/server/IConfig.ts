@@ -1,5 +1,5 @@
 export interface IConfig {
-    frontend: Staticless.Config.Frontend;
+    frontend: Staticless.Config.IFrontend;
 
     server: {
         address: string;

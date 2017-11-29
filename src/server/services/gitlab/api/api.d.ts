@@ -1,5 +1,5 @@
 declare namespace GitLabApi {
-    interface Project {
+    interface IProject {
         path_with_namespace: string;
     }
 }

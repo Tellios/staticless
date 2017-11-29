@@ -26,7 +26,7 @@ declare namespace Staticless {
     }
 
     namespace Config {
-        interface Frontend {
+        interface IFrontend {
             title: string;
         }
     }
