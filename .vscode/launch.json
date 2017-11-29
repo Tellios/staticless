@@ -26,7 +26,8 @@
                 ],
                 "sourceMaps": true,
                 "smartStep": true,
-                "showAsyncStacks": true
+                "showAsyncStacks": true,
+                "outputCapture": "std"
             }
         ]
     }

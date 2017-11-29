@@ -11,14 +11,14 @@ import { Log } from "./Log";
 
 export class Server {
     public init() {
-        const settings = this.initializeConfig();
+        const config = this.initializeConfig();
         const log = this.initializeLogging();
 
         log.debug("Initializing container");
-        const container = this.initializeContainer(log, settings);
+        const container = this.initializeContainer(log, config);
 
         log.debug("Intializing hapi server instance");
-        const hapiServer = this.intializeHapiServer();
+        const hapiServer = this.intializeHapiServer(config.get());
 
         log.debug("Initializing routes");
         this.initializeRoutes(hapiServer, container);
@@ -59,21 +59,22 @@ export class Server {
         return new Log(logger);
     }
 
-    private initializeContainer(log: Log, settings: Config): Container {
+    private initializeContainer(log: Log, config: Config): Container {
         const container = new Container();
-        configureContainer(container, log, settings);
+        configureContainer(container, log, config);
 
         return container;
     }
 
-    private intializeHapiServer(): HapiServer {
+    private intializeHapiServer(config: IConfig): HapiServer {
         const hapiServer = new HapiServer();
         hapiServer.register([
             require("hapi-async-handler"),
             require("inert")
         ]);
         hapiServer.connection({
-            port: 8080
+            address: config.server.address,
+            port: config.server.port
         });
 
         return hapiServer;

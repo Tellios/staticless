@@ -1,0 +1,11 @@
+sudo: required
+
+language: node_js
+  - "lts/*"
+
+services:
+  - docker
+
+script:
+  - npm run build:prod
+  - npm prune --production

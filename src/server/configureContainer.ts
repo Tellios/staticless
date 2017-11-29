@@ -12,9 +12,9 @@ import { GitLabWikiService } from "./services/gitlab/api/GitLabWikiService";
 import { MarkdownParserService } from "./services/markdown/MarkdownParserService";
 import { CacheService } from "./services/CacheService";
 
-export function configureContainer(container: Container, log: Log, settings: Config) {
+export function configureContainer(container: Container, log: Log, config: Config) {
     container.bind(Log).toConstantValue(log);
-    container.bind(Config).toConstantValue(settings);
+    container.bind(Config).toConstantValue(config);
 
     container.bind(FrontendConfigController).to(FrontendConfigController);
     container.bind(BaseController).to(FrontendConfigController);

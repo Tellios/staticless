@@ -11,8 +11,16 @@ export function loadConfig(): IConfig {
         .file("/var/config/staticless.json")
         .file("workingDirectory", path.join(process.cwd(), "staticless.json"))
         .file("appDirectory", path.join(__dirname, "staticless.json"))
+        .defaults({
+            server: {
+                address: "0.0.0.0",
+                port: 8080
+            }
+        })
         .required([
             "frontend:title",
+            "server:port",
+            "server:address",
             "gitlab:url",
             "gitlab:apiToken",
             "gitlab:projectId"
@@ -21,6 +29,11 @@ export function loadConfig(): IConfig {
     return {
         frontend: {
             title: nconf.get("frontend:title")
+        },
+
+        server: {
+            address: nconf.get("server:address"),
+            port: nconf.get("server:port")
         },
 
         gitlab: {
