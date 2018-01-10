@@ -4,7 +4,7 @@ The goal of Staticless is to provide a simplified flow for viewing markdown wiki
 The required [GitLab API](https://docs.gitlab.com/ce/api/wikis.html) was added in GitLab 10.0, Staticless will therefore not work with versions before GitLab 10.0.
 
 ## Running Staticless
-For now the only supported way of using Staticless is by using the provided [Docker container](https://store.docker.com/community/images/tellios/staticless). More ways will be added and documented in the future.
+For now the only supported way of using Staticless is by using the provided [Docker container](https://store.docker.com/community/images/tellios/staticless). More ways may be added and documented in the future.
 
 ### Configuring Staticless
 Configurations can be applied using arguments, environment variables and configuration files. It is also possible to combine these options, which in turn will override the other configurations using this order (first overrides everything):
