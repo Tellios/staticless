@@ -15,7 +15,7 @@ module.exports = (env) => {
     ];
 
     if (env.prod === 'false') {
-        clientFiles.push({ from: "./staticless.json", to: "../staticless.json" });
+        clientFiles.push({ from: "./staticless.json", to: "../config/staticless.json" });
     }
 
     return {

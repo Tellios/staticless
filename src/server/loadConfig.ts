@@ -8,9 +8,8 @@ export function loadConfig(): IConfig {
     nconf
         .argv()
         .env({ lowerCase: true, separator: "_" })
-        .file("/var/config/staticless.json")
         .file("workingDirectory", path.join(process.cwd(), "staticless.json"))
-        .file("appDirectory", path.join(__dirname, "staticless.json"))
+        .file("appDirectory", path.join(global.appRoot, "config", "staticless.json"))
         .defaults({
             server: {
                 address: "0.0.0.0",
