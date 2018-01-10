@@ -9,10 +9,10 @@ services:
 
 script:
   - >
-    npm install && 
-    npm run lint && 
-    npm run build:prod && 
-    npm prune --production && 
+    npm install &&
+    npm run lint &&
+    npm run build:prod &&
+    npm prune --production &&
     docker build -t tellios/staticless .
 
 after_success:
