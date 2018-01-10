@@ -8,11 +8,12 @@ services:
   - docker
 
 script:
-  - npm install
-  - npm run lint
-  - npm run build:prod
-  - npm prune --production
-  - docker build -t tellios/staticless .
+  - >
+    npm install && 
+    npm run lint && 
+    npm run build:prod && 
+    npm prune --production && 
+    docker build -t tellios/staticless .
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
