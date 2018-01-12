@@ -1,7 +1,8 @@
 import * as React from "react";
-import * as classNames from "classnames";
-import * as styles from "./HeaderComponent.css";
-import { IconButtonComponent } from "../components/IconButtonComponent";
+import AppBar from "material-ui/AppBar";
+import Toolbar from "material-ui/Toolbar";
+import Typography from "material-ui/Typography";
+import IconButton from "material-ui/IconButton";
 
 export interface IHeaderProps {
     title: string;
@@ -12,22 +13,29 @@ export interface IHeaderProps {
 export class HeaderComponent extends React.Component<IHeaderProps> {
     public render() {
         return (
-            <div className={styles.AppHeaderContainer}>
-                <h1 className={styles.AppHeader}>
-                    <span onClick={this.props.onMenuClick}
-                        className={classNames("material-icons", styles.AppHeaderMenuIcon)}>
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton
+                        color="contrast"
+                        aria-label="Menu"
+                        title="Menu"
+                        onClick={this.props.onMenuClick}>
                         menu
-                    </span>
-                    {this.props.title}
-                </h1>
+                    </IconButton>
 
-                <IconButtonComponent
-                    className={styles.AppHeaderConfigButton}
-                    icon="settings"
-                    tooltip="Settings"
-                    onClick={this.props.onSettingsClick}
-                />
-            </div>
+                    <Typography type="title" color="inherit" style={{ flex: 1 }}>
+                        {this.props.title}
+                    </Typography>
+
+                    <IconButton
+                        color="contrast"
+                        aria-label="Settings"
+                        title="Settings"
+                        onClick={this.props.onSettingsClick}>
+                        settings
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
         );
     }
 }

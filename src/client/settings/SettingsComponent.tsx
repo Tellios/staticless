@@ -1,5 +1,11 @@
 import * as React from "react";
 import { ModalComponent } from "../components/ModalComponent";
+import Input, { InputLabel } from "material-ui/Input";
+import { MenuItem } from "material-ui/Menu";
+import { FormControl, FormHelperText } from "material-ui/Form";
+import Select from "material-ui/Select";
+import { withStyles, WithStyles } from "material-ui/styles";
+import { Theme } from "material-ui/styles/createMuiTheme";
 
 export interface ISettingsComponentProps {
     settings: Client.ISettings;
@@ -8,42 +14,47 @@ export interface ISettingsComponentProps {
     onCancel(): void;
 }
 
-export class SettingsComponent extends React.Component<ISettingsComponentProps> {
-    constructor(props: ISettingsComponentProps) {
-        super(props);
-
-        this.onAction = this.onAction.bind(this);
+const decorate = withStyles((theme: Theme) => ({
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 300
     }
+}));
 
-    public render() {
-        return (
-            <ModalComponent title="Settings" onAction={this.onAction}>
-                <div>
-                    <div>
-                        <label className="form-label">Code theme</label>
-                        <select
+export const SettingsComponent = decorate<ISettingsComponentProps>(
+    class extends React.Component<ISettingsComponentProps & WithStyles<"formControl">> {
+        public render() {
+            return (
+                <ModalComponent title="Settings" onAction={this.onAction} open={true}>
+                    <FormControl className={this.props.classes.formControl}>
+                        <InputLabel htmlFor="code-theme">Code theme</InputLabel>
+                        <Select
+                            input={<Input name="codeTheme" id="code-theme" />}
                             value={this.props.settings.codeTheme}
-                            className="form-input"
-                            onChange={(e) => this.props.onCodeThemeSelected(e.target.value as Client.CodeTheme)}
+                            onChange={this.onCodeThemeSelected}
                         >
-                            <option value="atom-one-dark">Atom One Dark</option>
-                            <option value="atom-one-light">Atom One Light</option>
-                            <option value="monokai">Monokai</option>
-                            <option value="solarized-dark">Solarized Dark</option>
-                            <option value="solarized-light">Solarized Light</option>
-                            <option value="tomorrow">Tomorrow</option>
-                        </select>
-                    </div>
-                </div>
-            </ModalComponent>
-        );
-    }
+                            <MenuItem value="atom-one-dark">Atom One Dark</MenuItem>
+                            <MenuItem value="atom-one-light">Atom One Light</MenuItem>
+                            <MenuItem value="monokai">Monokai</MenuItem>
+                            <MenuItem value="solarized-dark">Solarized Dark</MenuItem>
+                            <MenuItem value="solarized-light">Solarized Light</MenuItem>
+                            <MenuItem value="tomorrow">Tomorrow</MenuItem>
+                        </Select>
+                    </FormControl>
+                </ModalComponent>
+            );
+        }
 
-    private onAction(action: "OK" | "Cancel") {
-        if (action === "OK") {
-            this.props.onSave();
-        } else {
-            this.props.onCancel();
+        private onAction = (action: "OK" | "Cancel") => {
+            if (action === "OK") {
+                this.props.onSave();
+            } else {
+                this.props.onCancel();
+            }
+        }
+
+        private onCodeThemeSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+            this.props.onCodeThemeSelected(e.target.value as Client.CodeTheme);
         }
     }
-}
+);
