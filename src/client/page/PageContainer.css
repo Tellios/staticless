@@ -1,17 +1,9 @@
 @value wiki-content-background from '../colors.css';
 
 .WikiContent {
-    margin-top: 30px;
-    margin-left: 15px;
-    margin-right: 15px;
-    margin-bottom: 30px;
-
-    padding-left: 20px;
-    padding-right: 20px;
-
     overflow-y: auto;
 
     width: 100%;
-    
+
     background-color: wiki-content-background;
 }

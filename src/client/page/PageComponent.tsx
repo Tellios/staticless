@@ -1,5 +1,6 @@
 import * as React from "react";
-import { LoadingComponent } from "../components/LoadingComponent";
+import { LinearProgress } from "material-ui/Progress";
+import * as styles from "./PageComponent.css";
 
 export interface IPageComponentProps {
     isLoading: boolean;
@@ -9,13 +10,13 @@ export interface IPageComponentProps {
 export class PageComponent extends React.PureComponent<IPageComponentProps> {
     public render() {
         if (this.props.isLoading) {
-            return <LoadingComponent />;
+            return <LinearProgress />;
         } else if (!this.props.content) {
-            return <div className="wiki-container"></div>;
+            return <div className={styles.WikiContainer}></div>;
         }
 
         return (
-            <div className="wiki-container">
+            <div className={styles.WikiContainer}>
                 <div dangerouslySetInnerHTML={{ __html: this.props.content }}></div>
             </div>
         );

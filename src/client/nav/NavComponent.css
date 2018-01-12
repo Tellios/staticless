@@ -4,6 +4,8 @@
 .Container {
     position: relative;
     background-color: grey-light;
+
+    overflow-y: auto;
 }
 
 .ContainerOpen {
