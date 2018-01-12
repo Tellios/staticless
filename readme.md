@@ -34,8 +34,8 @@ which is equivalent to the argument `--object.property value` and the environmen
 | Property         | Type     | Description                                                                    |
 | ---------------- | -------- | ------------------------------------------------------------------------------ |
 | frontend.title   | String   | Title displayed in the web UI.                                                 |
-| gitlab.apiToken  | String   | Token used to authenticate with the GitLab API.                                |
-| gitlab.projectId | Number   | The ID of the GitLab project which contains the WIKI.                          |
+| gitlab.apitoken  | String   | Token used to authenticate with the GitLab API.                                |
+| gitlab.projectid | Number   | The ID of the GitLab project which contains the WIKI.                          |
 | gitlab.url       | String   | Url to the GitLab instance used, e.g for GitLab.com it is https://gitlab.com/. |
 | server.address   | String   | Host name or IP address the server will listen on, defaults to `0.0.0.0`.      |
 | server.port      | Number   | Ports the server will listen on, defaults to `8080`.                           |
@@ -46,7 +46,7 @@ When using docker, both the `server.address` and `server.port` configurations wi
 Start a container instance of Staticless by running the following `docker run` command:
 
 ```shell
-docker run
+docker run \
   -d \
   -e "GITLAB_APITOKEN=my-api-token" \
   -e "GITLAB_PROJECTID=my-project-id" \

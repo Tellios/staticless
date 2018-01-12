@@ -15,7 +15,7 @@ export class MarkdownParserService {
 
     public parse(markdown: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            marked(markdown, this.markedConfig, (err, result) => {
+            marked(markdown, this.markedConfig, (err: any, result: string) => {
                 if (err) {
                     return reject(new Error(`Unable to parse markdown: ${err}`));
                 }
@@ -28,7 +28,7 @@ export class MarkdownParserService {
     private getRenderer() {
         const renderer = new marked.Renderer();
 
-        renderer.heading = (text, level) => {
+        renderer.heading = (text: string, level: number) => {
             const escapedText = text.toLowerCase().replace(/[^\w]+/g, "-");
 
             return [
@@ -43,12 +43,23 @@ export class MarkdownParserService {
             ].join("");
         };
 
-        renderer.codespan = (code) => {
+        renderer.codespan = (code: string) => {
             return `<code class="inline-code-block">${code}</code>`;
         };
 
-        renderer.code = (code, language) => {
+        renderer.code = (code: string, language: string) => {
+            if (language === "mermaid") {
+                return [
+                    `<pre class="code-block">`,
+                    `<code class="mermaid">`,
+                    code,
+                    `</code>`,
+                    `</pre>`
+                ].join("");
+            }
+
             const result = highlight.highlightAuto(code, [language]);
+
             return [
                 `<pre class="hljs code-block">`,
                 `<code class="${result.language}">`,
