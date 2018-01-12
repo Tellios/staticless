@@ -87,7 +87,7 @@ describe("GitLabWikiService", () => {
             const tree = await gitLabWikiService.getPageTree();
 
             expect(tree.length).toBe(1);
-            expect(tree[0].page.format).toEqual("markdown");
+            expect(tree[0].page!.format).toEqual("markdown");
         });
 
         test("should group pages with the same slug", async () => {

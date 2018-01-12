@@ -1,0 +1,16 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./dist"
+    },
+    "include": [
+        "src/server/**/*.ts",
+        "src/run.ts",
+        "src/models/"
+    ],
+    "exclude": [
+        "node_modules",
+        "src/**/*.test.ts",
+        "src/server/__tests__/setupTestFramework.ts"
+    ]
+}

@@ -9,9 +9,9 @@
     "test:watch": "jest --watchAll",
     "cleanDist": "rimraf dist",
     "prebuild:prod": "npm run cleanDist",
-    "build:prod": "tsc && webpack --env.prod",
+    "build:prod": "tsc -p tsconfig.build.json && webpack --env.prod",
     "prebuild:watch": "npm run cleanDist",
-    "build:watch": "concurrently \"tsc --watch\" \"webpack --watch --env.prod=false\" ",
+    "build:watch": "concurrently \"tsc -p tsconfig.build.json --watch\" \"webpack --watch --env.prod=false\" ",
     "start": "node --inspect-brk=5858 --no-lazy dist/run",
     "start:debug": "npm run build && npm run start"
   },

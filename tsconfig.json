@@ -4,7 +4,6 @@
         "allowJs": false,
         "alwaysStrict": true,
         "newLine": "LF",
-        "outDir": "./dist",
         "target": "es2015",
         "sourceMap": true,
         "strictNullChecks": true,
@@ -16,19 +15,9 @@
         "lib": [
             "es2017",
             "dom"
-        ],
-        "typeRoots": [
-            "src/models"
         ]
     },
-    "include": [
-        "src/server/**/*.ts",
-        "src/run.ts",
-        "src/models/"
-    ],
     "exclude": [
-        "node_modules",
-        "src/**/*.test.ts",
-        "src/server/__tests__/setupTestFramework.ts"
+        "src/client"
     ]
 }
