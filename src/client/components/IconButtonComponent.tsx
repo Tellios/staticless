@@ -6,6 +6,7 @@ export interface IIconButtonComponent {
     icon: string;
     className?: string;
     iconClassName?: string;
+    tooltip?: string;
     onClick(): void;
 }
 
@@ -19,7 +20,7 @@ export class IconButtonComponent extends React.Component<IIconButtonComponent> {
         const iconClassName = classNames("material-icons", this.props.iconClassName);
 
         return (
-            <span className={className} onClick={this.props.onClick}>
+            <span className={className} onClick={this.props.onClick} title={this.props.tooltip}>
                 <span className={iconClassName}>{this.props.icon}</span>
             </span>
         );

@@ -9,7 +9,7 @@ export interface ISettingsContainerProps {
 
 export class SettingsContainer extends React.Component<ISettingsContainerProps, Client.ISettings> {
     constructor(props: ISettingsContainerProps) {
-        super();
+        super(props);
 
         this.handleSave = this.handleSave.bind(this);
         this.handleCancel = this.handleCancel.bind(this);

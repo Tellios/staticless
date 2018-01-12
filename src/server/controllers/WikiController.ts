@@ -24,7 +24,7 @@ export class WikiController extends BaseController {
     @get("/")
     public async index(request: Request, reply: Base_Reply) {
         try {
-            const pageList = await this.wikiService.getPageList();
+            const pageList = await this.wikiService.getPageTree();
             reply.response(pageList);
         } catch (error) {
             reply.response(error.toString())

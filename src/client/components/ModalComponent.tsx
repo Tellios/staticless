@@ -11,7 +11,7 @@ export interface IModalComponentProps {
 
 export class ModalComponent extends React.Component<IModalComponentProps> {
     constructor(props: IModalComponentProps) {
-        super();
+        super(props);
 
         this.onKeyDown = this.onKeyDown.bind(this);
     }

@@ -24,6 +24,7 @@ export class HeaderComponent extends React.Component<IHeaderProps> {
                 <IconButtonComponent
                     className={styles.AppHeaderConfigButton}
                     icon="settings"
+                    tooltip="Settings"
                     onClick={this.props.onSettingsClick}
                 />
             </div>

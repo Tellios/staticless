@@ -18,7 +18,7 @@ export class GitLabWikiService {
         this.pageCache.initialize(30);
     }
 
-    public async getPageList(): Promise<Staticless.GitLab.IWikiPageTreeItem[]> {
+    public async getPageTree(): Promise<Staticless.GitLab.IWikiPageTreeItem[]> {
         let pageTree = this.pageTreeCache.get("tree");
 
         if (pageTree) {
@@ -114,7 +114,8 @@ export class GitLabWikiService {
 
     private findTreeNode(
         slugParts: string[],
-        tree: Staticless.GitLab.IWikiPageTreeItem[]
+        tree: Staticless.GitLab.IWikiPageTreeItem[],
+        currentNode?: Staticless.GitLab.IWikiPageTreeItem
     ): { node: Staticless.GitLab.IWikiPageTreeItem, slugParts: string[] } | undefined {
         const currentSlug = slugParts[0];
         const shiftedSlugParts = slugParts.slice(1);
@@ -122,11 +123,18 @@ export class GitLabWikiService {
         for (const node of tree) {
             if (node.slugPart === currentSlug) {
                 if (shiftedSlugParts && shiftedSlugParts.length > 0) {
-                    return this.findTreeNode(shiftedSlugParts, node.children);
+                    return this.findTreeNode(shiftedSlugParts, node.children, node);
                 } else {
                     return { node, slugParts: shiftedSlugParts };
                 }
             }
+        }
+
+        if (currentNode) {
+            return {
+                node: currentNode,
+                slugParts
+            };
         }
 
         return undefined;
@@ -147,19 +155,23 @@ export class GitLabWikiService {
                 tree.push({
                     children: [],
                     page,
-                    slugPart: slug,
-                    title: upperFirst(page.title)
+                    slugPart: part,
+                    title: this.getReadableTitle(page.title)
                 });
             } else {
                 const node = {
                     children: [],
                     page: null,
-                    slugPart: slug,
-                    title: upperFirst(part)
+                    slugPart: part,
+                    title: this.getReadableTitle(part)
                 };
                 tree.push(node);
                 tree = node.children;
             }
         }
+    }
+
+    private getReadableTitle(title: string) {
+        return upperFirst(title).replace(/-/g, " ");
     }
 }

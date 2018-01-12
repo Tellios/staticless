@@ -21,8 +21,8 @@ export function loadConfig(): IConfig {
             "server:port",
             "server:address",
             "gitlab:url",
-            "gitlab:apiToken",
-            "gitlab:projectId"
+            "gitlab:apitoken",
+            "gitlab:projectid"
         ]);
 
     return {
@@ -36,8 +36,8 @@ export function loadConfig(): IConfig {
         },
 
         gitlab: {
-            apiToken: nconf.get("gitlab:apiToken"),
-            projectId: nconf.get("gitlab:projectId"),
+            apiToken: nconf.get("gitlab:apitoken"),
+            projectId: nconf.get("gitlab:projectid"),
             url: nconf.get("gitlab:url")
         }
     };
