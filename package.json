@@ -84,6 +84,7 @@
     "lodash": "^4.17.4",
     "marked": "^0.3.12",
     "material-ui": "^1.0.0-beta.27",
+    "mermaid": "^7.1.2",
     "nconf": "^0.9.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

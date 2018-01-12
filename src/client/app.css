@@ -10,6 +10,8 @@
     margin: 0;
 
     font-family: 'Roboto', sans-serif;
+
+    overflow-y: hidden;
 }
 
 :global .form-label {

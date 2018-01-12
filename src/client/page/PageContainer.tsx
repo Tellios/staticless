@@ -3,6 +3,7 @@ import * as request from "superagent";
 import * as styles from "./PageContainer.css";
 import { LoadingComponent } from "../components/LoadingComponent";
 import { PageComponent } from "./PageComponent";
+import * as mermaid from "mermaid";
 
 export interface IPageContainerProps {
     slug: string;
@@ -28,6 +29,8 @@ export class PageContainer extends React.Component<IPageContainerProps, IPageCom
         if (this.props.slug !== oldProps.slug) {
             this.fetchPage(this.props.slug);
         }
+
+        mermaid.init();
     }
 
     public render() {
