@@ -2,7 +2,7 @@ import { GitLabWikiService } from "../GitLabWikiService";
 import { Config } from "../../../../Config";
 import { GitLabApiRepository } from "../GitLabApiRepository";
 import { MarkdownParserService } from "../../../markdown/MarkdownParserService";
-import { CacheService } from "../../../CacheService";
+import { CacheService } from "../../../cache/CacheService";
 
 describe("GitLabWikiService", () => {
     let configMock: Config;
@@ -51,8 +51,8 @@ describe("GitLabWikiService", () => {
 
         gitLabWikiService = new GitLabWikiService(
             configMock,
-            gitLabApiRepositoryMock as any,
-            markdownParserServiceMock as any,
+            gitLabApiRepositoryMock as GitLabApiRepository,
+            markdownParserServiceMock as MarkdownParserService,
             pageTreeCacheMock as any,
             pageCacheMock as any
         );

@@ -1,7 +1,6 @@
 import { injectable } from "inversify";
 import { GitLabApiRepository } from "./GitLabApiRepository";
-import { Config } from "../../../Config";
-import { CacheService } from "../../CacheService";
+import { CacheService } from "../../cache/CacheService";
 
 @injectable()
 export class GitLabProjectService {

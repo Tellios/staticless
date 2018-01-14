@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as request from "superagent";
+import Reboot from "material-ui/Reboot";
 import * as styles from "./AppComponent.css";
 import { HeaderComponent } from "./header/HeaderComponent";
 import { NavContainer } from "./nav/NavContainer";
@@ -44,6 +45,7 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
     public render() {
         return (
             <div className={styles.Root}>
+                <Reboot />
                 {
                     this.state.config
                     && <HeaderComponent

@@ -3,7 +3,7 @@ import { injectable } from "inversify";
 import { Config } from "../../../Config";
 import { MarkdownParserService } from "../../markdown/MarkdownParserService";
 import { GitLabApiRepository } from "./GitLabApiRepository";
-import { CacheService } from "../../CacheService";
+import { CacheService } from "../../cache/CacheService";
 
 @injectable()
 export class GitLabWikiService {

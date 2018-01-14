@@ -16,7 +16,7 @@ export function configureRouting(hapiServer: HapiServer, controllers: BaseContro
 }
 
 function configureClientRoutes(hapiServer: HapiServer) {
-    const clientDir = path.join(process.cwd(), "client");
+    const clientDir = path.join(global.appRoot, "client");
     const clientFiles = klaw(clientDir, { nodir: true })
         .map((file) => file.path);
 

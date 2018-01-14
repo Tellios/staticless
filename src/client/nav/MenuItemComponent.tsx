@@ -15,9 +15,6 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
     constructor(props: IMenuItemProps) {
         super(props);
         this.state = { isOpen: this.shouldBeOpen(props.menuItem) };
-
-        this.handleMenuItemClick = this.handleMenuItemClick.bind(this);
-        this.handleFolderClick = this.handleFolderClick.bind(this);
     }
 
     public render(): any {
@@ -68,15 +65,17 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
         return this.state.isOpen ? "keyboard_arrow_down" : "keyboard_arrow_right";
     }
 
-    private handleMenuItemClick() {
+    private handleMenuItemClick = () => {
         if (this.props.menuItem.page) {
             this.props.onClick(this.props.menuItem.page.slug);
-        } else if (this.props.menuItem.children.length > 0) {
+        }
+
+        if (this.props.menuItem.children.length > 0) {
             this.handleFolderClick();
         }
     }
 
-    private handleFolderClick() {
+    private handleFolderClick = () => {
         this.setState({ isOpen: !this.state.isOpen });
     }
 
