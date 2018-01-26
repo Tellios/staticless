@@ -27,7 +27,8 @@ export function loadConfig(): IConfig {
 
     return {
         frontend: {
-            title: nconf.get("frontend:title")
+            title: nconf.get("frontend:title"),
+            homeSlug: nconf.get("frontend:homeslug")
         },
 
         server: {

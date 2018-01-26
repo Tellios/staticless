@@ -16,7 +16,7 @@ export class HeaderComponent extends React.Component<IHeaderProps> {
             <AppBar position="static">
                 <Toolbar>
                     <IconButton
-                        color="contrast"
+                        color="inherit"
                         aria-label="Menu"
                         title="Menu"
                         onClick={this.props.onMenuClick}>
@@ -28,7 +28,7 @@ export class HeaderComponent extends React.Component<IHeaderProps> {
                     </Typography>
 
                     <IconButton
-                        color="contrast"
+                        color="inherit"
                         aria-label="Settings"
                         title="Settings"
                         onClick={this.props.onSettingsClick}>

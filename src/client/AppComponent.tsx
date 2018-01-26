@@ -105,9 +105,19 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
                 return;
             }
 
+            const config: Staticless.Config.IFrontend = res.body;
+
             this.setState({
-                config: res.body
+                config
             });
+
+            if (config.homeSlug) {
+                if (window.location.pathname === "/") {
+                    this.setState({
+                        slug: config.homeSlug
+                    });
+                }
+            }
         });
     }
 
