@@ -11,10 +11,6 @@ export class SettingsContainer extends React.Component<ISettingsContainerProps, 
     constructor(props: ISettingsContainerProps) {
         super(props);
 
-        this.handleSave = this.handleSave.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
-        this.handleCodeThemeSelected = this.handleCodeThemeSelected.bind(this);
-
         this.state = settingsRepository.get();
     }
 
@@ -29,17 +25,17 @@ export class SettingsContainer extends React.Component<ISettingsContainerProps, 
         );
     }
 
-    private handleSave() {
+    private handleSave = () => {
         settingsRepository.set(this.state);
         themeLoader.loadTheme(this.state.codeTheme);
         this.props.onClose();
     }
 
-    private handleCancel() {
+    private handleCancel = () => {
         this.props.onClose();
     }
 
-    private handleCodeThemeSelected(value: Client.CodeTheme) {
+    private handleCodeThemeSelected = (value: Client.CodeTheme) => {
         this.setState((prevState): Client.ISettings => {
             return {
                 codeTheme: value

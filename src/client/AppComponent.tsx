@@ -22,10 +22,6 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
 
     constructor(props: any) {
         super(props);
-        this.handleMenuClick = this.handleMenuClick.bind(this);
-        this.handleSettingsOpen = this.handleSettingsOpen.bind(this);
-        this.handleSettingsClose = this.handleSettingsClose.bind(this);
-        this.handleNavigateToPage = this.handleNavigateToPage.bind(this);
 
         const isOpenValue = localStorage[this.STORE_MENU_OPEN];
         const isOpen = isOpenValue === "true";
@@ -51,6 +47,7 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
                     && <HeaderComponent
                             title={this.state.config.title}
                             onMenuClick={this.handleMenuClick}
+                            onTitleClick={this.handleTitleClick}
                             onSettingsClick={this.handleSettingsOpen}
                         />
                 }
@@ -78,24 +75,30 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
         }
     }
 
-    private handleMenuClick() {
+    private handleMenuClick = () => {
         const isOpen = !this.state.isMenuOpen;
         localStorage.setItem(this.STORE_MENU_OPEN, String(isOpen));
         this.setState({ isMenuOpen: isOpen });
     }
 
-    private handleSettingsOpen() {
+    private handleSettingsOpen = () => {
         this.setState({ isSettingsOpen: true });
     }
 
-    private handleSettingsClose() {
+    private handleSettingsClose = () => {
         this.setState({ isSettingsOpen: false });
     }
 
-    private handleNavigateToPage(slug: string) {
+    private handleNavigateToPage = (slug: string) => {
         const url = `${window.location.origin}/${slug}`;
         window.history.pushState(slug, slug, url);
         this.setState({ slug });
+    }
+
+    private handleTitleClick = () => {
+        if (this.state.config && this.state.config.homeSlug) {
+            this.handleNavigateToPage(this.state.config.homeSlug);
+        }
     }
 
     private fetchConfig() {
