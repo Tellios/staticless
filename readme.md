@@ -33,14 +33,15 @@ which is equivalent to the argument `--object.property value` and the environmen
 
 ##### Available configuration properties
 
-| Property         | Type     | Description                                                                    |
-| ---------------- | -------- | ------------------------------------------------------------------------------ |
-| frontend.title   | String   | Title displayed in the web UI.                                                 |
-| gitlab.apitoken  | String   | Token used to authenticate with the GitLab API.                                |
-| gitlab.projectid | Number   | The ID of the GitLab project which contains the WIKI.                          |
-| gitlab.url       | String   | Url to the GitLab instance used, e.g for GitLab.com it is https://gitlab.com/. |
-| server.address   | String   | Host name or IP address the server will listen on, defaults to `0.0.0.0`.      |
-| server.port      | Number   | Ports the server will listen on, defaults to `8080`.                           |
+| Property          | Type     | Description                                                                    |
+| ----------------- | -------- | ------------------------------------------------------------------------------ |
+| frontend.title    | String   | Title displayed in the web UI.                                                 |
+| frontend.homeslug | String   | A wiki slug pointing to the default page displayed when no page is selected    |
+| gitlab.apitoken   | String   | Token used to authenticate with the GitLab API.                                |
+| gitlab.projectid  | Number   | The ID of the GitLab project which contains the WIKI.                          |
+| gitlab.url        | String   | Url to the GitLab instance used, e.g for GitLab.com it is https://gitlab.com/. |
+| server.address    | String   | Host name or IP address the server will listen on, defaults to `0.0.0.0`.      |
+| server.port       | Number   | Ports the server will listen on, defaults to `8080`.                           |
 
 ### Using Docker
 When using docker, both the `server.address` and `server.port` configurations will always be set to their defaults. Changing the port and listener address is instead managed by exposing the container on different ports using docker port mapping.
@@ -54,5 +55,6 @@ docker run \
   -e "GITLAB_PROJECTID=my-project-id" \
   -e "GITLAB_URL=my-gitlab-url"
   -e "FRONTEND_TITLE=\"My wiki\"" \
+  -e "FRONTEND_HOMESLUG=\"home\"" \
   tellios/staticless
 ```
