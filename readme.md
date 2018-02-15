@@ -58,3 +58,12 @@ docker run \
   -e "FRONTEND_HOMESLUG=\"home\"" \
   tellios/staticless
 ```
+
+It is also possible to use the container with a configuration file:
+
+```shell
+docker run \
+  -d \
+  -v "path/to/staticless/config/folder:/opt/app/config" \
+  tellios/staticless
+```
