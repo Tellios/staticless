@@ -114,6 +114,8 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
                 config
             });
 
+            document.title = config.title;
+
             if (config.homeSlug) {
                 if (window.location.pathname === "/") {
                     this.setState({
