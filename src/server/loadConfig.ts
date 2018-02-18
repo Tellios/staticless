@@ -14,6 +14,9 @@ export function loadConfig(): IConfig {
             server: {
                 address: "0.0.0.0",
                 port: 8080
+            },
+            cache: {
+                time: 30
             }
         })
         .required([
@@ -40,6 +43,10 @@ export function loadConfig(): IConfig {
             apiToken: nconf.get("gitlab:apitoken"),
             projectId: nconf.get("gitlab:projectid"),
             url: nconf.get("gitlab:url")
+        },
+
+        cache: {
+            time: nconf.get("cache:time")
         }
     };
 }

@@ -42,6 +42,7 @@ which is equivalent to the argument `--object.property value` and the environmen
 | gitlab.url        | String   | Url to the GitLab instance used, e.g for GitLab.com it is https://gitlab.com/. |
 | server.address    | String   | Host name or IP address the server will listen on, defaults to `0.0.0.0`.      |
 | server.port       | Number   | Ports the server will listen on, defaults to `8080`.                           |
+| cache.time        | Number   | Minutes to cache gitlab related items. `0` will disable caching.               |
 
 ### Using Docker
 When using docker, both the `server.address` and `server.port` configurations will always be set to their defaults. Changing the port and listener address is instead managed by exposing the container on different ports using docker port mapping.

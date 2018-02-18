@@ -11,4 +11,12 @@ export interface IConfig {
         apiToken: string;
         projectId: string;
     };
+
+    cache: {
+        /**
+         * How long an item should be cached in minutes.
+         * If set to 0, caching will be disabled.
+         */
+        time: number;
+    };
 }
