@@ -14,8 +14,8 @@ export class GitLabWikiService {
         private pageTreeCache: CacheService<string, Staticless.GitLab.IWikiPageTreeItem[]>,
         private pageCache: CacheService<string, Staticless.GitLab.IWikiPage>
     ) {
-        this.pageTreeCache.initialize(30);
-        this.pageCache.initialize(30);
+        this.pageTreeCache.initialize();
+        this.pageCache.initialize();
     }
 
     public async getPageTree(): Promise<Staticless.GitLab.IWikiPageTreeItem[]> {

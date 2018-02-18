@@ -8,7 +8,7 @@ export class GitLabProjectService {
         private api: GitLabApiRepository,
         private cacheService: CacheService<string, GitLabApi.IProject>
     ) {
-        this.cacheService.initialize(30);
+        this.cacheService.initialize();
     }
 
     public async getProject(projectId: string): Promise<GitLabApi.IProject> {

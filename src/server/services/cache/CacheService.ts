@@ -1,5 +1,6 @@
 import { injectable } from "inversify";
 import { TimeService } from "../time/TimeService";
+import { Config } from "../../Config";
 
 interface ICacheItem<TValue> {
     added: number;
@@ -11,14 +12,17 @@ export class CacheService<TKey, TValue> {
     private store: Map<TKey, ICacheItem<TValue>>;
     private lifeExpectancy: number;
 
-    constructor(private timeService: TimeService) { }
+    constructor(
+        private timeService: TimeService,
+        private config: Config
+    ) { }
 
     /**
      * Initializes the cache service.
      * @param lifeExpectancy the age cached items are valid in minutes.
      */
-    public initialize(lifeExpectancy: number) {
-        this.lifeExpectancy = lifeExpectancy;
+    public initialize() {
+        this.lifeExpectancy = this.config.get().cache.time;
         this.store = new Map();
     }
 
@@ -38,10 +42,12 @@ export class CacheService<TKey, TValue> {
     }
 
     public set(key: TKey, value: TValue) {
-        this.store.set(key, {
-            added: this.timeService.getCurrentTimeInMilliseconds(),
-            value
-        });
+        if (this.lifeExpectancy > 0) {
+            this.store.set(key, {
+                added: this.timeService.getCurrentTimeInMilliseconds(),
+                value
+            });
+        }
     }
 
     private hasItemExpired(item: ICacheItem<TValue>) {
