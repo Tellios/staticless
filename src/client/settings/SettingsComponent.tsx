@@ -1,11 +1,11 @@
-import * as React from "react";
-import { ModalComponent } from "../components/ModalComponent";
-import Input, { InputLabel } from "material-ui/Input";
-import { MenuItem } from "material-ui/Menu";
-import { FormControl, FormHelperText } from "material-ui/Form";
-import Select from "material-ui/Select";
-import { withStyles, WithStyles } from "material-ui/styles";
-import { Theme } from "material-ui/styles/createMuiTheme";
+import * as React from 'react';
+import { ModalComponent } from '../components/ModalComponent';
+import Input, { InputLabel } from 'material-ui/Input';
+import { MenuItem } from 'material-ui/Menu';
+import { FormControl, FormHelperText } from 'material-ui/Form';
+import Select from 'material-ui/Select';
+import { withStyles, WithStyles } from 'material-ui/styles';
+import { Theme } from 'material-ui/styles/createMuiTheme';
 
 export interface ISettingsComponentProps {
     settings: Client.ISettings;
@@ -22,7 +22,7 @@ const decorate = withStyles((theme: Theme) => ({
 }));
 
 export const SettingsComponent = decorate<ISettingsComponentProps>(
-    class extends React.Component<ISettingsComponentProps & WithStyles<"formControl">> {
+    class extends React.Component<ISettingsComponentProps & WithStyles<'formControl'>> {
         public render() {
             return (
                 <ModalComponent title="Settings" onAction={this.onAction} open={true}>
@@ -45,16 +45,16 @@ export const SettingsComponent = decorate<ISettingsComponentProps>(
             );
         }
 
-        private onAction = (action: "OK" | "Cancel") => {
-            if (action === "OK") {
+        private onAction = (action: 'OK' | 'Cancel') => {
+            if (action === 'OK') {
                 this.props.onSave();
             } else {
                 this.props.onCancel();
             }
-        }
+        };
 
         private onCodeThemeSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
             this.props.onCodeThemeSelected(e.target.value as Client.CodeTheme);
-        }
+        };
     }
 );

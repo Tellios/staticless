@@ -1,7 +1,7 @@
-import * as React from "react";
-import { SettingsComponent } from "./SettingsComponent";
-import { settingsRepository } from "./SettingsRepository";
-import { themeLoader } from "./ThemeLoader";
+import * as React from 'react';
+import { SettingsComponent } from './SettingsComponent';
+import { settingsRepository } from './SettingsRepository';
+import { themeLoader } from './ThemeLoader';
 
 export interface ISettingsContainerProps {
     onClose(): void;
@@ -29,11 +29,11 @@ export class SettingsContainer extends React.Component<ISettingsContainerProps, 
         settingsRepository.set(this.state);
         themeLoader.loadTheme(this.state.codeTheme);
         this.props.onClose();
-    }
+    };
 
     private handleCancel = () => {
         this.props.onClose();
-    }
+    };
 
     private handleCodeThemeSelected = (value: Client.CodeTheme) => {
         this.setState((prevState): Client.ISettings => {
@@ -41,5 +41,5 @@ export class SettingsContainer extends React.Component<ISettingsContainerProps, 
                 codeTheme: value
             };
         });
-    }
+    };
 }

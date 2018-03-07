@@ -1,6 +1,6 @@
-import * as React from "react";
-import * as request from "superagent";
-import { NavComponent } from "./NavComponent";
+import * as React from 'react';
+import * as request from 'superagent';
+import { NavComponent } from './NavComponent';
 
 export interface INavProps {
     onNavigateToPage: (slug: string) => void;
@@ -20,14 +20,13 @@ export class NavContainer extends React.Component<INavProps, INavState> {
     }
 
     public componentDidMount() {
-        request.get(`/wiki/${this.props.sourceName}`)
-            .end((err, res) => {
-                if (err) {
-                    return console.error(err);
-                }
+        request.get(`/wiki/${this.props.sourceName}`).end((err, res) => {
+            if (err) {
+                return console.error(err);
+            }
 
-                this.setState({ pages: res.body, isLoading: false });
-            });
+            this.setState({ pages: res.body, isLoading: false });
+        });
     }
 
     public render() {

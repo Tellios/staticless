@@ -1,3 +1,3 @@
-export * from "./controller";
-export * from "./controllerMethods";
-export * from "./IRouteConfig";
+export * from './controller';
+export * from './controllerMethods';
+export * from './IRouteConfig';

@@ -1,10 +1,10 @@
-import { upperFirst } from "lodash";
-import { injectable } from "inversify";
-import { Config } from "../../../Config";
-import { MarkdownParserService } from "../../markdown/MarkdownParserService";
-import { GitLabApiRepository } from "./GitLabApiRepository";
-import { CacheService } from "../../cache/CacheService";
-import { ISourceConfig } from "../../../IConfig";
+import { upperFirst } from 'lodash';
+import { injectable } from 'inversify';
+import { Config } from '../../../Config';
+import { MarkdownParserService } from '../../markdown/MarkdownParserService';
+import { GitLabApiRepository } from './GitLabApiRepository';
+import { CacheService } from '../../cache/CacheService';
+import { ISourceConfig } from '../../../IConfig';
 
 @injectable()
 export class GitLabWikiService {
@@ -18,7 +18,9 @@ export class GitLabWikiService {
         this.pageCache.initialize();
     }
 
-    public async getPageTree(sourceConfig: ISourceConfig): Promise<Staticless.GitLab.IWikiPageTreeItem[]> {
+    public async getPageTree(
+        sourceConfig: ISourceConfig
+    ): Promise<Staticless.GitLab.IWikiPageTreeItem[]> {
         const cacheKey = `${sourceConfig.name}-tree`;
         let pageTree = this.pageTreeCache.get(cacheKey);
 
@@ -30,11 +32,11 @@ export class GitLabWikiService {
         const response = await this.api.get(sourceConfig, path, { with_content: 0 });
 
         const pages = (response.body as any[])
-            .map((pageItem) => {
+            .map(pageItem => {
                 return { ...pageItem } as Staticless.GitLab.IWikiPageItem;
             })
-            .filter((pageItem) => {
-                return pageItem.format === "markdown";
+            .filter(pageItem => {
+                return pageItem.format === 'markdown';
             });
 
         pageTree = this.createPageTree(pages);
@@ -43,7 +45,10 @@ export class GitLabWikiService {
         return pageTree;
     }
 
-    public async getPage(sourceConfig: ISourceConfig, slug: string): Promise<Staticless.GitLab.IWikiPage> {
+    public async getPage(
+        sourceConfig: ISourceConfig,
+        slug: string
+    ): Promise<Staticless.GitLab.IWikiPage> {
         const cacheKey = `${sourceConfig.name}-${slug}`;
         let page = this.pageCache.get(cacheKey);
 
@@ -67,7 +72,9 @@ export class GitLabWikiService {
         return `projects/${projectId}/wikis`;
     }
 
-    private createPageTree(pages: Staticless.GitLab.IWikiPageItem[]): Staticless.GitLab.IWikiPageTreeItem[] {
+    private createPageTree(
+        pages: Staticless.GitLab.IWikiPageItem[]
+    ): Staticless.GitLab.IWikiPageTreeItem[] {
         const tree: Staticless.GitLab.IWikiPageTreeItem[] = [];
 
         const pagesWithSlugParts = this.getPagesWithSlugParts(pages);
@@ -82,23 +89,25 @@ export class GitLabWikiService {
     private getPagesWithSlugParts(
         pages: Staticless.GitLab.IWikiPageItem[]
     ): Staticless.GitLab.IWikiPageItemWithSlugParts[] {
-        return pages.map((page) => {
-            return {
-                slugParts: page.slug.split("/"),
-                ...page
-            };
-        }).sort((a, b) => {
-            const aLength = a.slugParts.length;
-            const bLength = b.slugParts.length;
+        return pages
+            .map(page => {
+                return {
+                    slugParts: page.slug.split('/'),
+                    ...page
+                };
+            })
+            .sort((a, b) => {
+                const aLength = a.slugParts.length;
+                const bLength = b.slugParts.length;
 
-            if (aLength > bLength) {
-                return 1;
-            } else if (aLength < bLength) {
-                return -1;
-            } else {
-                return 0;
-            }
-        });
+                if (aLength > bLength) {
+                    return 1;
+                } else if (aLength < bLength) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            });
     }
 
     private appendPageToTree(
@@ -118,7 +127,7 @@ export class GitLabWikiService {
         slugParts: string[],
         tree: Staticless.GitLab.IWikiPageTreeItem[],
         currentNode?: Staticless.GitLab.IWikiPageTreeItem
-    ): { node: Staticless.GitLab.IWikiPageTreeItem, slugParts: string[] } | undefined {
+    ): { node: Staticless.GitLab.IWikiPageTreeItem; slugParts: string[] } | undefined {
         const currentSlug = slugParts[0];
         const shiftedSlugParts = slugParts.slice(1);
 
@@ -150,7 +159,7 @@ export class GitLabWikiService {
         const endIndex = slugParts.length - 1;
 
         for (let i = 0; i < slugParts.length; i++) {
-            const slug = slugParts.slice(0, i + 1).join("/");
+            const slug = slugParts.slice(0, i + 1).join('/');
             const part = slugParts[i];
 
             if (i === endIndex) {
@@ -174,6 +183,6 @@ export class GitLabWikiService {
     }
 
     private getReadableTitle(title: string) {
-        return upperFirst(title).replace(/-/g, " ");
+        return upperFirst(title).replace(/-/g, ' ');
     }
 }

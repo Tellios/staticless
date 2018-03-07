@@ -1,33 +1,26 @@
-import {
-    Base_Reply,
-    Request
-} from "hapi";
-import { injectable } from "inversify";
-import { Config } from "../Config";
-import {
-    controller,
-    get
-} from "../decorators/routing";
-import { BaseController } from "./base/BaseController";
+import { Base_Reply, Request } from 'hapi';
+import { injectable } from 'inversify';
+import { Config } from '../Config';
+import { controller, get } from '../decorators/routing';
+import { BaseController } from './base/BaseController';
 
-@controller("/frontendConfig")
+@controller('/frontendConfig')
 @injectable()
 export class FrontendConfigController extends BaseController {
     constructor(private config: Config) {
         super();
     }
 
-    @get("/")
+    @get('/')
     public async index(request: Request, reply: Base_Reply) {
         try {
             reply.response(this.config.get().frontend);
         } catch (error) {
-            reply.response(error.toString())
-                .code(500);
+            reply.response(error.toString()).code(500);
         }
     }
 
-    @get("/sources")
+    @get('/sources')
     public async getSources(request: Request, reply: Base_Reply) {
         try {
             reply.response(
@@ -37,8 +30,7 @@ export class FrontendConfigController extends BaseController {
                 }))
             );
         } catch (error) {
-            reply.response(error.toString())
-                .code(500);
+            reply.response(error.toString()).code(500);
         }
     }
 }

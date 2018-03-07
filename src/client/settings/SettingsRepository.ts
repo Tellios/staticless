@@ -1,7 +1,6 @@
-
-const STORAGE_KEY = "staticless-settings";
+const STORAGE_KEY = 'staticless-settings';
 const DEFAULT_SETTINGS: Client.ISettings = {
-    codeTheme: "atom-one-dark"
+    codeTheme: 'atom-one-dark'
 };
 
 class SettingsRepository {

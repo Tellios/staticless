@@ -1,5 +1,5 @@
-import { IControllerObject } from "./IControllerObject";
-import { IRouteConfig } from "./IRouteConfig";
+import { IControllerObject } from './IControllerObject';
+import { IRouteConfig } from './IRouteConfig';
 
 export function addRoute(target: IControllerObject, key: string, config: IRouteConfig) {
     const routeId = `${target.constructor.name}.${key}`;
@@ -8,7 +8,7 @@ export function addRoute(target: IControllerObject, key: string, config: IRouteC
         target.rawRoutes = {};
     }
 
-    if (typeof target.rawRoutes[routeId] !== "undefined") {
+    if (typeof target.rawRoutes[routeId] !== 'undefined') {
         throw new Error(`Route for '${routeId}' has already been added`);
     }
 

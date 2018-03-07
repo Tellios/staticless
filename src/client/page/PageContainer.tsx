@@ -1,9 +1,9 @@
-import * as React from "react";
-import * as request from "superagent";
-import * as styles from "./PageContainer.css";
-import { LoadingComponent } from "../components/LoadingComponent";
-import { PageComponent } from "./PageComponent";
-import * as mermaid from "mermaid";
+import * as React from 'react';
+import * as request from 'superagent';
+import * as styles from './PageContainer.css';
+import { LoadingComponent } from '../components/LoadingComponent';
+import { PageComponent } from './PageComponent';
+import * as mermaid from 'mermaid';
 
 export interface IPageContainerProps {
     sourceName: string;
@@ -35,18 +35,19 @@ export class PageContainer extends React.Component<IPageContainerProps, IPageCom
     }
 
     public render() {
-        return (
-            <div className={styles.WikiContent}>
-                {this.renderContent()}
-            </div>
-        );
+        return <div className={styles.WikiContent}>{this.renderContent()}</div>;
     }
 
     private renderContent() {
         if (this.state.error) {
             return <div>{this.state.error}</div>;
         } else if (this.state.page) {
-            return <PageComponent isLoading={this.state.isLoadingPage} content={this.state.page.content} />;
+            return (
+                <PageComponent
+                    isLoading={this.state.isLoadingPage}
+                    content={this.state.page.content}
+                />
+            );
         } else {
             return <PageComponent isLoading={this.state.isLoadingPage} />;
         }

@@ -1,6 +1,6 @@
-import * as React from "react";
-import * as classNames from "classnames";
-import * as styles from "./MenuItemComponent.css";
+import * as React from 'react';
+import * as classNames from 'classnames';
+import * as styles from './MenuItemComponent.css';
 
 export interface IMenuItemProps {
     menuItem: Staticless.GitLab.IWikiPageTreeItem;
@@ -18,28 +18,30 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
     }
 
     public render(): any {
-        const labelClassName = classNames(
-            styles.MenuItemLabelText,
-            { [styles.MenuItemLabelTextSelected]: this.isSelected(this.props.menuItem) }
-        );
+        const labelClassName = classNames(styles.MenuItemLabelText, {
+            [styles.MenuItemLabelTextSelected]: this.isSelected(this.props.menuItem)
+        });
 
         return (
             <div className={styles.MenuItem}>
                 <div className={styles.MenuItemLabel}>
-                    {this.props.menuItem.children.length > 0
-                        && <span
-                            className={classNames("material-icons", styles.MenuItemIcon)}
-                            onClick={this.handleFolderClick}>{this.getIcon()}
-                        </span>}
+                    {this.props.menuItem.children.length > 0 && (
+                        <span
+                            className={classNames('material-icons', styles.MenuItemIcon)}
+                            onClick={this.handleFolderClick}
+                        >
+                            {this.getIcon()}
+                        </span>
+                    )}
 
-                    <span
-                        className={labelClassName}
-                        onClick={this.handleMenuItemClick}>
+                    <span className={labelClassName} onClick={this.handleMenuItemClick}>
                         {this.props.menuItem.title}
                     </span>
                 </div>
 
-                {this.props.menuItem.children.length > 0 && this.state.isOpen && this.renderChildren()}
+                {this.props.menuItem.children.length > 0 &&
+                    this.state.isOpen &&
+                    this.renderChildren()}
             </div>
         );
     }
@@ -47,22 +49,22 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
     private renderChildren() {
         return (
             <div className={styles.MenuItemChildren}>
-                {
-                    this.props.menuItem.children.map((child: Staticless.GitLab.IWikiPageTreeItem, index: number) => {
+                {this.props.menuItem.children.map(
+                    (child: Staticless.GitLab.IWikiPageTreeItem, index: number) => {
                         const key = `${index}-${child.slugPart}`;
                         return (
                             <div className={styles.MenuItemChild} key={key}>
                                 <MenuItemComponent menuItem={child} onClick={this.props.onClick} />
                             </div>
                         );
-                    })
-                }
+                    }
+                )}
             </div>
         );
     }
 
     private getIcon() {
-        return this.state.isOpen ? "keyboard_arrow_down" : "keyboard_arrow_right";
+        return this.state.isOpen ? 'keyboard_arrow_down' : 'keyboard_arrow_right';
     }
 
     private handleMenuItemClick = () => {
@@ -73,11 +75,11 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
         if (this.props.menuItem.children.length > 0) {
             this.handleFolderClick();
         }
-    }
+    };
 
     private handleFolderClick = () => {
         this.setState({ isOpen: !this.state.isOpen });
-    }
+    };
 
     private shouldBeOpen(menuItem: Staticless.GitLab.IWikiPageTreeItem) {
         const slugPath = this.getWindowSlugPath();
@@ -98,9 +100,9 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
     private getWindowSlugPath() {
         if (window.location.pathname && window.location.pathname.length > 0) {
             return window.location.pathname
-                .split("/")
+                .split('/')
                 .slice(2)
-                .join("/");
+                .join('/');
         } else {
             return undefined;
         }
