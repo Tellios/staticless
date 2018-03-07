@@ -1,33 +1,18 @@
 import { GitLabWikiService } from "../GitLabWikiService";
-import { Config } from "../../../../Config";
 import { GitLabApiRepository } from "../GitLabApiRepository";
 import { MarkdownParserService } from "../../../markdown/MarkdownParserService";
 import { CacheService } from "../../../cache/CacheService";
+import { ISourceConfig } from "../../../../IConfig";
 
 describe("GitLabWikiService", () => {
-    let configMock: Config;
     let gitLabApiRepositoryMock: Partial<GitLabApiRepository>;
     let markdownParserServiceMock: Partial<MarkdownParserService>;
     let pageTreeCacheMock: Partial<CacheService<any, any>>;
     let pageCacheMock: Partial<CacheService<any, any>>;
+    let sourceConfigMock: ISourceConfig;
     let gitLabWikiService: GitLabWikiService;
 
     beforeEach(() => {
-        configMock = new Config({
-            frontend: {
-                title: ""
-            },
-            gitlab: {
-                apiToken: "",
-                projectId: "",
-                url: ""
-            },
-            server: {
-                address: "",
-                port: 1234
-            }
-        });
-
         gitLabApiRepositoryMock = {
             get: jest.fn(),
             getUploadedFile: jest.fn()
@@ -49,8 +34,15 @@ describe("GitLabWikiService", () => {
             set: jest.fn()
         };
 
+        sourceConfigMock = {
+            name: "test-source",
+            homeslug: "slug",
+            apitoken: "1234",
+            projectid: "12",
+            url: "http://gitlab"
+        };
+
         gitLabWikiService = new GitLabWikiService(
-            configMock,
             gitLabApiRepositoryMock as GitLabApiRepository,
             markdownParserServiceMock as MarkdownParserService,
             pageTreeCacheMock as any,
@@ -62,7 +54,7 @@ describe("GitLabWikiService", () => {
         test("should return an empty tree if api returns empty list", async () => {
             gitLabApiRepositoryMock.get = jest.fn(() => Promise.resolve({ body: [] }));
 
-            const tree = await gitLabWikiService.getPageTree();
+            const tree = await gitLabWikiService.getPageTree(sourceConfigMock);
 
             expect(tree).toEqual([]);
         });
@@ -84,7 +76,7 @@ describe("GitLabWikiService", () => {
                 ]
             }));
 
-            const tree = await gitLabWikiService.getPageTree();
+            const tree = await gitLabWikiService.getPageTree(sourceConfigMock);
 
             expect(tree.length).toBe(1);
             expect(tree[0].page!.format).toEqual("markdown");
@@ -136,7 +128,7 @@ describe("GitLabWikiService", () => {
                 ]
             }));
 
-            const tree = await gitLabWikiService.getPageTree();
+            const tree = await gitLabWikiService.getPageTree(sourceConfigMock);
 
             // We should have 2 top nodes
             expect(tree.length).toBe(2);
@@ -172,7 +164,7 @@ describe("GitLabWikiService", () => {
                 ]
             }));
 
-            const tree = await gitLabWikiService.getPageTree();
+            const tree = await gitLabWikiService.getPageTree(sourceConfigMock);
 
             expect(tree.length).toBe(1);
             expect(tree[0].title).toEqual("Some title that contains stuff");
@@ -183,18 +175,18 @@ describe("GitLabWikiService", () => {
                 body: []
             }));
 
-            const tree = await gitLabWikiService.getPageTree();
+            const tree = await gitLabWikiService.getPageTree(sourceConfigMock);
 
-            expect(pageTreeCacheMock.set).toHaveBeenCalledWith("tree", tree);
+            expect(pageTreeCacheMock.set).toHaveBeenCalledWith("test-source-tree", tree);
         });
 
         test("should use cached tree if available", async () => {
             const cachedTree = { treeProp: "test" };
             pageTreeCacheMock.get = jest.fn(() => cachedTree);
 
-            const tree = await gitLabWikiService.getPageTree();
+            const tree = await gitLabWikiService.getPageTree(sourceConfigMock);
 
-            expect(pageTreeCacheMock.get).toHaveBeenCalledWith("tree");
+            expect(pageTreeCacheMock.get).toHaveBeenCalledWith("test-source-tree");
             expect(gitLabApiRepositoryMock.get).not.toHaveBeenCalled();
             expect(cachedTree).toBe(tree);
         });
@@ -205,10 +197,10 @@ describe("GitLabWikiService", () => {
             const cachedPage = { pageProp: "test" };
             pageCacheMock.get = jest.fn(() => cachedPage);
 
-            const page = await gitLabWikiService.getPage("slug");
+            const page = await gitLabWikiService.getPage(sourceConfigMock, "slug");
 
             expect(page).toBe(cachedPage);
-            expect(pageCacheMock.get).toHaveBeenCalledWith("slug");
+            expect(pageCacheMock.get).toHaveBeenCalledWith("test-source-slug");
             expect(gitLabApiRepositoryMock.get).not.toHaveBeenCalled();
         });
 
@@ -223,11 +215,11 @@ describe("GitLabWikiService", () => {
             }));
             markdownParserServiceMock.parse = jest.fn(() => Promise.resolve("parsed markdown"));
 
-            const page = await gitLabWikiService.getPage("slug");
+            const page = await gitLabWikiService.getPage(sourceConfigMock, "slug");
 
             expect(page.content).toEqual("parsed markdown");
-            expect(markdownParserServiceMock.parse).toHaveBeenCalledWith("markdown");
-            expect(pageCacheMock.set).toBeCalledWith("slug", page);
+            expect(markdownParserServiceMock.parse).toHaveBeenCalledWith("markdown", "test-source", "slug");
+            expect(pageCacheMock.set).toBeCalledWith("test-source-slug", page);
         });
     });
 });

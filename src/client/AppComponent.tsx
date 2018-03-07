@@ -10,6 +10,8 @@ import { LoadingComponent } from "./components/LoadingComponent";
 
 export interface IAppComponentState {
     config?: Staticless.Config.IFrontend;
+    source?: Staticless.Config.ISource;
+    sources?: Staticless.Config.ISource[];
     error?: any;
     slug?: string;
     isMenuOpen: boolean;
@@ -45,14 +47,21 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
                 {
                     this.state.config
                     && <HeaderComponent
-                            title={this.state.config.title}
-                            onMenuClick={this.handleMenuClick}
-                            onTitleClick={this.handleTitleClick}
-                            onSettingsClick={this.handleSettingsOpen}
-                        />
+                        title={this.state.config.title}
+                        onMenuClick={this.handleMenuClick}
+                        onTitleClick={this.handleTitleClick}
+                        onSettingsClick={this.handleSettingsOpen}
+                    />
                 }
                 <div className={styles.Container}>
-                    <NavContainer onNavigateToPage={this.handleNavigateToPage} isOpen={this.state.isMenuOpen} />
+                    {
+                        this.state.source &&
+                        <NavContainer
+                            sourceName={this.state.source.name}
+                            onNavigateToPage={this.handleNavigateToPage}
+                            isOpen={this.state.isMenuOpen}
+                        />
+                    }
                     {this.renderContent()}
                 </div>
                 {
@@ -68,8 +77,8 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
             return <LoadingComponent />;
         } else if (this.state.error) {
             return <div>{this.state.error.toString()}</div>;
-        } else if (this.state.slug) {
-            return <PageContainer slug={this.state.slug} />;
+        } else if (this.state.source && this.state.slug) {
+            return <PageContainer sourceName={this.state.source.name} slug={this.state.slug} />;
         } else {
             return <div></div>;
         }
@@ -90,14 +99,17 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
     }
 
     private handleNavigateToPage = (slug: string) => {
-        const url = `${window.location.origin}/${slug}`;
-        window.history.pushState(slug, slug, url);
-        this.setState({ slug });
+        if (this.state.source) {
+            const sourceName = encodeURIComponent(this.state.source.name);
+            const url = `${window.location.origin}/${sourceName}/${slug}`;
+            window.history.pushState({ sourceName, slug }, slug, url);
+            this.setState({ slug });
+        }
     }
 
     private handleTitleClick = () => {
-        if (this.state.config && this.state.config.homeSlug) {
-            this.handleNavigateToPage(this.state.config.homeSlug);
+        if (this.state.config && this.state.source && this.state.source.homeSlug) {
+            this.handleNavigateToPage(this.state.source.homeSlug);
         }
     }
 
@@ -116,21 +128,49 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
 
             document.title = config.title;
 
-            if (config.homeSlug) {
-                if (window.location.pathname === "/") {
-                    this.setState({
-                        slug: config.homeSlug
-                    });
+            request("/frontendConfig/sources").end((sourcesErr, sourcesRes) => {
+                if (sourcesErr) {
+                    this.setState({ error: sourcesErr });
+                    return;
                 }
-            }
+
+                const sources: Staticless.Config.ISource[] = sourcesRes.body;
+
+                this.setState({
+                    sources
+                });
+
+                if (sources.length > 0) {
+                    if (window.location.pathname === "/") {
+                        this.setState({
+                            source: sources[0],
+                            slug: sources[0].homeSlug
+                        });
+                    } else {
+                        this.updateStateUsingLocation();
+                    }
+                }
+            });
         });
     }
 
     private updateStateUsingLocation() {
-        const slug = window.location.pathname.substr(1);
+        const path = window.location.pathname.substr(1);
 
-        if (slug.length > 0) {
-            this.setState({ slug });
+        if (this.state.sources && path.length > 0) {
+            const pathSplit = path.split("/");
+
+            if (pathSplit.length > 0) {
+                const source = this.state.sources.find((s) => decodeURIComponent(pathSplit[0]) === s.name);
+
+                if (source) {
+                    const slug = pathSplit.length > 1
+                        ? pathSplit.slice(1).join("/")
+                        : source.homeSlug;
+
+                    this.setState({ source, slug });
+                }
+            }
         }
     }
 }

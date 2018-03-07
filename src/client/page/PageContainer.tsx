@@ -6,6 +6,7 @@ import { PageComponent } from "./PageComponent";
 import * as mermaid from "mermaid";
 
 export interface IPageContainerProps {
+    sourceName: string;
     slug: string;
 }
 
@@ -22,12 +23,12 @@ export class PageContainer extends React.Component<IPageContainerProps, IPageCom
     }
 
     public componentDidMount() {
-        this.fetchPage(this.props.slug);
+        this.fetchPage(this.props.sourceName, this.props.slug);
     }
 
     public componentDidUpdate(oldProps: IPageContainerProps) {
-        if (this.props.slug !== oldProps.slug) {
-            this.fetchPage(this.props.slug);
+        if (this.props.sourceName !== oldProps.sourceName || this.props.slug !== oldProps.slug) {
+            this.fetchPage(this.props.sourceName, this.props.slug);
         }
 
         mermaid.init();
@@ -51,10 +52,10 @@ export class PageContainer extends React.Component<IPageContainerProps, IPageCom
         }
     }
 
-    private fetchPage(slug: string) {
+    private fetchPage(sourceName: string, slug: string) {
         this.setState({ isLoadingPage: true });
 
-        slug = encodeURIComponent(slug);
+        slug = `${encodeURIComponent(sourceName)}/${encodeURIComponent(slug)}`;
 
         request(`/wiki/${slug}`).end((err, res) => {
             if (err) {

@@ -4,11 +4,11 @@ import { Config } from "../../../Config";
 import { MarkdownParserService } from "../../markdown/MarkdownParserService";
 import { GitLabApiRepository } from "./GitLabApiRepository";
 import { CacheService } from "../../cache/CacheService";
+import { ISourceConfig } from "../../../IConfig";
 
 @injectable()
 export class GitLabWikiService {
     constructor(
-        private config: Config,
         private api: GitLabApiRepository,
         private markdown: MarkdownParserService,
         private pageTreeCache: CacheService<string, Staticless.GitLab.IWikiPageTreeItem[]>,
@@ -18,15 +18,16 @@ export class GitLabWikiService {
         this.pageCache.initialize();
     }
 
-    public async getPageTree(): Promise<Staticless.GitLab.IWikiPageTreeItem[]> {
-        let pageTree = this.pageTreeCache.get("tree");
+    public async getPageTree(sourceConfig: ISourceConfig): Promise<Staticless.GitLab.IWikiPageTreeItem[]> {
+        const cacheKey = `${sourceConfig.name}-tree`;
+        let pageTree = this.pageTreeCache.get(cacheKey);
 
         if (pageTree) {
             return pageTree;
         }
 
-        const path = this.getWikiApiPath();
-        const response = await this.api.get(path, { with_content: 0 });
+        const path = this.getWikiApiPath(sourceConfig.projectid);
+        const response = await this.api.get(sourceConfig, path, { with_content: 0 });
 
         const pages = (response.body as any[])
             .map((pageItem) => {
@@ -37,32 +38,33 @@ export class GitLabWikiService {
             });
 
         pageTree = this.createPageTree(pages);
-        this.pageTreeCache.set("tree", pageTree);
+        this.pageTreeCache.set(cacheKey, pageTree);
 
         return pageTree;
     }
 
-    public async getPage(slug: string): Promise<Staticless.GitLab.IWikiPage> {
-        let page = this.pageCache.get(slug);
+    public async getPage(sourceConfig: ISourceConfig, slug: string): Promise<Staticless.GitLab.IWikiPage> {
+        const cacheKey = `${sourceConfig.name}-${slug}`;
+        let page = this.pageCache.get(cacheKey);
 
         if (page) {
             return page;
         }
 
-        let path = this.getWikiApiPath();
+        let path = this.getWikiApiPath(sourceConfig.projectid);
         path += `/${encodeURIComponent(slug)}`;
 
-        const response = await this.api.get(path);
+        const response = await this.api.get(sourceConfig, path);
         page = response.body as Staticless.GitLab.IWikiPage;
-        page.content = await this.markdown.parse(page.content);
+        page.content = await this.markdown.parse(page.content, sourceConfig.name, slug);
 
-        this.pageCache.set(slug, page);
+        this.pageCache.set(cacheKey, page);
 
         return page;
     }
 
-    private getWikiApiPath() {
-        return `projects/${this.config.get().gitlab.projectId}/wikis`;
+    private getWikiApiPath(projectId: string) {
+        return `projects/${projectId}/wikis`;
     }
 
     private createPageTree(pages: Staticless.GitLab.IWikiPageItem[]): Staticless.GitLab.IWikiPageTreeItem[] {

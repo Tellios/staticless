@@ -1,21 +1,23 @@
 import { injectable } from "inversify";
 import * as request from "superagent";
-import { Config } from "../../../Config";
+import { ISourceConfig } from "../../../IConfig";
 
 @injectable()
 export class GitLabApiRepository {
-    constructor(private config: Config) { }
-
-    public async getUploadedFile(projectPath: string, fileId: string, filename: string): Promise<any[]> {
+    public async getUploadedFile(
+        sourceConfig: ISourceConfig, projectPath: string, fileId: string, filename: string
+    ): Promise<any[]> {
         const path = `${projectPath}/uploads/${fileId}/${filename}`;
 
-        return await this.performRequest(this.getUrl(path), (url) => request.get(url))
-            .then((response) => response.body);
+        return await this.performRequest(
+            this.getUrl(sourceConfig.url, path), sourceConfig.apitoken, (url) => request.get(url))
+                .then((response) => response.body);
     }
 
-    public async get(path: string, query?: {}): Promise<request.Response> {
+    public async get(sourceConfig: ISourceConfig, path: string, query?: {}): Promise<request.Response> {
         return await this.performRequest(
-            this.getUrl(`api/v4/${path}`),
+            this.getUrl(sourceConfig.url, `api/v4/${path}`),
+            sourceConfig.apitoken,
             (url) => request.get(url),
             query
         );
@@ -23,11 +25,12 @@ export class GitLabApiRepository {
 
     private performRequest(
         url: string,
+        apiToken: string,
         requestFactory: (url: string) => request.SuperAgentRequest,
         query?: {}
     ): Promise<request.Response> {
         const req = requestFactory(url)
-            .set("PRIVATE-TOKEN", this.config.get().gitlab.apiToken)
+            .set("PRIVATE-TOKEN", apiToken)
             .accept("application/json");
 
         if (query) {
@@ -37,10 +40,8 @@ export class GitLabApiRepository {
         return req;
     }
 
-    private getUrl(path: string) {
-        const url = this.config.get().gitlab.url;
-
-        return `${url}/${path}`
+    private getUrl(baseUrl: string, path: string) {
+        return `${baseUrl}/${path}`
             // Remove any duplicate slashes due to user config input
             .replace(/\/\//g, "/")
             // Make sure that the protocol at the start of the url is correctly

@@ -4,6 +4,7 @@ import { NavComponent } from "./NavComponent";
 
 export interface INavProps {
     onNavigateToPage: (slug: string) => void;
+    sourceName: string;
     isOpen: boolean;
 }
 
@@ -19,7 +20,7 @@ export class NavContainer extends React.Component<INavProps, INavState> {
     }
 
     public componentDidMount() {
-        request.get(`/wiki`)
+        request.get(`/wiki/${this.props.sourceName}`)
             .end((err, res) => {
                 if (err) {
                     return console.error(err);

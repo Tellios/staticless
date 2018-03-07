@@ -97,7 +97,10 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
 
     private getWindowSlugPath() {
         if (window.location.pathname && window.location.pathname.length > 0) {
-            return window.location.pathname.slice(1, window.location.pathname.length);
+            return window.location.pathname
+                .split("/")
+                .slice(2)
+                .join("/");
         } else {
             return undefined;
         }

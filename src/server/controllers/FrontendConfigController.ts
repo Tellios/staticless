@@ -26,4 +26,19 @@ export class FrontendConfigController extends BaseController {
                 .code(500);
         }
     }
+
+    @get("/sources")
+    public async getSources(request: Request, reply: Base_Reply) {
+        try {
+            reply.response(
+                this.config.get().sources.map((source): Staticless.Config.ISource => ({
+                    name: source.name,
+                    homeSlug: source.homeslug
+                }))
+            );
+        } catch (error) {
+            reply.response(error.toString())
+                .code(500);
+        }
+    }
 }

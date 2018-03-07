@@ -6,8 +6,6 @@ import * as nconf from "nconf";
 
 export function loadConfig(): IConfig {
     nconf
-        .argv()
-        .env({ lowerCase: true, separator: "_" })
         .file("workingDirectory", path.join(process.cwd(), "staticless.json"))
         .file("appDirectory", path.join(global.appRoot, "config", "staticless.json"))
         .defaults({
@@ -23,15 +21,12 @@ export function loadConfig(): IConfig {
             "frontend:title",
             "server:port",
             "server:address",
-            "gitlab:url",
-            "gitlab:apitoken",
-            "gitlab:projectid"
+            "sources"
         ]);
 
     return {
         frontend: {
-            title: nconf.get("frontend:title"),
-            homeSlug: nconf.get("frontend:homeslug")
+            title: nconf.get("frontend:title")
         },
 
         server: {
@@ -39,11 +34,7 @@ export function loadConfig(): IConfig {
             port: nconf.get("server:port")
         },
 
-        gitlab: {
-            apiToken: nconf.get("gitlab:apitoken"),
-            projectId: nconf.get("gitlab:projectid"),
-            url: nconf.get("gitlab:url")
-        },
+        sources: nconf.get("sources"),
 
         cache: {
             time: nconf.get("cache:time")
