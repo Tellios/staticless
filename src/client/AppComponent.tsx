@@ -48,6 +48,9 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
                     this.state.config
                     && <HeaderComponent
                         title={this.state.config.title}
+                        sources={this.state.sources}
+                        selectedSource={this.state.source}
+                        onSourceSelected={this.handleSourceSelected}
                         onMenuClick={this.handleMenuClick}
                         onTitleClick={this.handleTitleClick}
                         onSettingsClick={this.handleSettingsOpen}
@@ -82,6 +85,12 @@ export class AppComponent extends React.Component<any, IAppComponentState> {
         } else {
             return <div></div>;
         }
+    }
+
+    private handleSourceSelected = (source: Staticless.Config.ISource) => {
+        this.setState({ source }, () => {
+            this.handleNavigateToPage(source.homeSlug);
+        });
     }
 
     private handleMenuClick = () => {
