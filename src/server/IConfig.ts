@@ -15,6 +15,14 @@ export interface IConfig {
          */
         time: number;
     };
+
+    cache: {
+        /**
+         * How long an item should be cached in minutes.
+         * If set to 0, caching will be disabled.
+         */
+        time: number;
+    };
 }
 
 export interface ISourceConfig {
