@@ -1,71 +1,47 @@
 import * as React from 'react';
-import * as request from 'superagent';
+import { connect } from 'react-redux';
 import * as styles from './PageContainer.css';
 import { LoadingComponent } from '../components/LoadingComponent';
 import { PageComponent } from './PageComponent';
 import * as mermaid from 'mermaid';
 
 export interface IPageContainerProps {
-    sourceName: string;
-    slug: string;
-}
-
-export interface IPageComponentState {
-    page?: Staticless.GitLab.IWikiPage;
-    error?: any;
+    page: Staticless.GitLab.IWikiPage | null;
+    error: Error | null;
     isLoadingPage: boolean;
 }
 
-export class PageContainer extends React.Component<IPageContainerProps, IPageComponentState> {
-    constructor(props: IPageContainerProps) {
-        super(props);
-        this.state = { isLoadingPage: false };
-    }
+const mapStateToProps = (state: Client.IState): IPageContainerProps => {
+    return {
+        page: state.wiki.page,
+        error: state.wiki.pageError,
+        isLoadingPage: state.wiki.pageLoading
+    };
+};
 
-    public componentDidMount() {
-        this.fetchPage(this.props.sourceName, this.props.slug);
-    }
-
-    public componentDidUpdate(oldProps: IPageContainerProps) {
-        if (this.props.sourceName !== oldProps.sourceName || this.props.slug !== oldProps.slug) {
-            this.fetchPage(this.props.sourceName, this.props.slug);
+export const PageContainer = connect(mapStateToProps)(
+    class extends React.Component<IPageContainerProps> {
+        public componentDidUpdate() {
+            mermaid.init();
         }
 
-        mermaid.init();
-    }
-
-    public render() {
-        return <div className={styles.WikiContent}>{this.renderContent()}</div>;
-    }
-
-    private renderContent() {
-        if (this.state.error) {
-            return <div>{this.state.error}</div>;
-        } else if (this.state.page) {
-            return (
-                <PageComponent
-                    isLoading={this.state.isLoadingPage}
-                    content={this.state.page.content}
-                />
-            );
-        } else {
-            return <PageComponent isLoading={this.state.isLoadingPage} />;
+        public render() {
+            return <div className={styles.WikiContent}>{this.renderContent()}</div>;
         }
-    }
 
-    private fetchPage(sourceName: string, slug: string) {
-        this.setState({ isLoadingPage: true });
-
-        slug = `${encodeURIComponent(sourceName)}/${encodeURIComponent(slug)}`;
-
-        request(`/wiki/${slug}`).end((err, res) => {
-            if (err) {
-                this.setState({ page: undefined, error: err, isLoadingPage: false });
-                return;
+        private renderContent() {
+            if (this.props.error) {
+                return <div>{this.props.error}</div>;
+            } else if (this.props.page) {
+                return (
+                    <PageComponent
+                        isLoading={this.props.isLoadingPage}
+                        content={this.props.page.content}
+                    />
+                );
+            } else {
+                return <PageComponent isLoading={this.props.isLoadingPage} />;
             }
-
-            const page = res.body;
-            this.setState({ page, error: undefined, isLoadingPage: false });
-        });
+        }
     }
-}
+);

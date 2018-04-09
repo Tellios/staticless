@@ -10,8 +10,7 @@ import { Theme } from 'material-ui/styles/createMuiTheme';
 export interface ISettingsComponentProps {
     settings: Client.ISettings;
     onCodeThemeSelected(theme: Client.CodeTheme): void;
-    onSave(): void;
-    onCancel(): void;
+    onClose(): void;
 }
 
 const decorate = withStyles((theme: Theme) => ({
@@ -25,7 +24,7 @@ export const SettingsComponent = decorate<ISettingsComponentProps>(
     class extends React.Component<ISettingsComponentProps & WithStyles<'formControl'>> {
         public render() {
             return (
-                <ModalComponent title="Settings" onAction={this.onAction} open={true}>
+                <ModalComponent title="Settings" onClose={this.props.onClose} open={true}>
                     <FormControl className={this.props.classes.formControl}>
                         <InputLabel htmlFor="code-theme">Code theme</InputLabel>
                         <Select
@@ -44,14 +43,6 @@ export const SettingsComponent = decorate<ISettingsComponentProps>(
                 </ModalComponent>
             );
         }
-
-        private onAction = (action: 'OK' | 'Cancel') => {
-            if (action === 'OK') {
-                this.props.onSave();
-            } else {
-                this.props.onCancel();
-            }
-        };
 
         private onCodeThemeSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
             this.props.onCodeThemeSelected(e.target.value as Client.CodeTheme);

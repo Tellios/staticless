@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
@@ -8,15 +9,22 @@ import Select from 'material-ui/Select';
 import { MenuItem } from 'material-ui/Menu';
 import { withStyles, WithStyles } from 'material-ui/styles';
 import { Theme } from 'material-ui/styles/createMuiTheme';
+import { settingsSet, settingsOpen } from '../state/settingsActions';
+import { selectSource } from '../state/configActions';
+import { fetchPage } from '../state/wikiActions';
 
 export interface IHeaderComponentProps {
     title: string;
     selectedSource?: Staticless.Config.ISource;
     sources?: Staticless.Config.ISource[];
-    onSourceSelected(source: Staticless.Config.ISource): void;
-    onMenuClick(): void;
-    onTitleClick(): void;
-    onSettingsClick(): void;
+    wikiMenuOpen: boolean;
+}
+
+export interface IHeaderComponentDispatch {
+    selectSource(source: Staticless.Config.ISource): void;
+    settingsSave(settings: Partial<Client.ISettings>): void;
+    fetchPage(sourceName: string, slug: string): void;
+    settingsOpen(): void;
 }
 
 const decorate = withStyles((theme: Theme) => ({
@@ -36,98 +44,132 @@ const decorate = withStyles((theme: Theme) => ({
     }
 }));
 
-export const HeaderComponent = decorate<IHeaderComponentProps>(
-    class extends React.Component<
-        IHeaderComponentProps &
-            WithStyles<'root'> &
-            WithStyles<'headerText'> &
-            WithStyles<'select'> &
-            WithStyles<'icon'>
-    > {
-        public render() {
-            return (
-                <AppBar position="static">
-                    <Toolbar>
-                        <IconButton
-                            color="inherit"
-                            aria-label="Menu"
-                            title="Menu"
-                            onClick={this.props.onMenuClick}
-                        >
-                            menu
-                        </IconButton>
+const mapStateToProps = (storeState: Client.IState): IHeaderComponentProps => {
+    return {
+        wikiMenuOpen: storeState.settings.settings.wikiMenuOpen,
+        selectedSource: storeState.config.selectedSource,
+        sources: storeState.config.sources,
+        title: storeState.config.config ? storeState.config.config.title : ''
+    };
+};
 
-                        <Typography type="title" color="inherit" style={{ flex: 1 }}>
-                            <span
-                                className={this.props.classes.headerText}
-                                onClick={this.props.onTitleClick}
+const mapDispatchToProps = (dispatch: any): IHeaderComponentDispatch => {
+    return {
+        settingsSave: settings => dispatch(settingsSet(settings)),
+        settingsOpen: () => dispatch(settingsOpen()),
+        selectSource: source => dispatch(selectSource(source)),
+        fetchPage: (sourceName, slug) => dispatch(fetchPage(sourceName, slug))
+    };
+};
+
+export const HeaderComponent: any = connect(mapStateToProps, mapDispatchToProps)(
+    decorate(
+        class extends React.Component<
+            IHeaderComponentProps &
+                IHeaderComponentDispatch &
+                WithStyles<'root'> &
+                WithStyles<'headerText'> &
+                WithStyles<'select'> &
+                WithStyles<'icon'>
+        > {
+            public render() {
+                return (
+                    <AppBar position="static">
+                        <Toolbar>
+                            <IconButton
+                                color="inherit"
+                                aria-label="Menu"
+                                title="Menu"
+                                onClick={this.handleMenuClick}
                             >
-                                {this.props.title}
-                            </span>
-                        </Typography>
+                                menu
+                            </IconButton>
 
-                        {this.props.sources &&
-                            this.props.sources.length > 1 && (
-                                <span>
-                                    <InputLabel classes={{ root: this.props.classes.root }}>
-                                        Selected Wiki:
-                                    </InputLabel>
-                                    <Select
-                                        classes={{
-                                            select: this.props.classes.select,
-                                            icon: this.props.classes.icon
-                                        }}
-                                        value={this.getSelectedSourceName()}
-                                        onChange={this.handleSelectSource}
-                                        disableUnderline={true}
-                                    >
-                                        {this.props.sources.map((source, index) => {
-                                            const selected =
-                                                this.props.selectedSource &&
-                                                this.props.selectedSource.name === source.name;
-                                            return (
-                                                <MenuItem key={index} value={source.name}>
-                                                    {source.name}
-                                                </MenuItem>
-                                            );
-                                        })}
-                                    </Select>
+                            <Typography type="title" color="inherit" style={{ flex: 1 }}>
+                                <span
+                                    className={this.props.classes.headerText}
+                                    onClick={this.handleTitleClick}
+                                >
+                                    {this.props.title}
                                 </span>
-                            )}
+                            </Typography>
 
-                        <IconButton
-                            color="inherit"
-                            aria-label="Settings"
-                            title="Settings"
-                            onClick={this.props.onSettingsClick}
-                        >
-                            settings
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
-            );
-        }
+                            {this.props.sources &&
+                                this.props.sources.length > 1 && (
+                                    <span>
+                                        <InputLabel classes={{ root: this.props.classes.root }}>
+                                            Selected Wiki:
+                                        </InputLabel>
+                                        <Select
+                                            classes={{
+                                                select: this.props.classes.select,
+                                                icon: this.props.classes.icon
+                                            }}
+                                            value={this.getSelectedSourceName()}
+                                            onChange={this.handleSelectSource}
+                                            disableUnderline={true}
+                                        >
+                                            {this.props.sources.map((source, index) => {
+                                                const selected =
+                                                    this.props.selectedSource &&
+                                                    this.props.selectedSource.name === source.name;
+                                                return (
+                                                    <MenuItem key={index} value={source.name}>
+                                                        {source.name}
+                                                    </MenuItem>
+                                                );
+                                            })}
+                                        </Select>
+                                    </span>
+                                )}
 
-        private handleSelectSource = (e: React.ChangeEvent<HTMLInputElement>) => {
-            if (this.props.sources) {
-                const selectedSource = this.props.sources.find(
-                    source => source.name === e.target.value
+                            <IconButton
+                                color="inherit"
+                                aria-label="Settings"
+                                title="Settings"
+                                onClick={this.props.settingsOpen}
+                            >
+                                settings
+                            </IconButton>
+                        </Toolbar>
+                    </AppBar>
                 );
+            }
 
-                if (selectedSource) {
-                    this.props.onSourceSelected(selectedSource);
+            private handleMenuClick = () => {
+                this.props.settingsSave({ wikiMenuOpen: !this.props.wikiMenuOpen });
+            };
+
+            private handleTitleClick = () => {
+                if (this.props.selectedSource) {
+                    this.props.fetchPage(
+                        this.props.selectedSource.name,
+                        this.props.selectedSource.homeSlug
+                    );
                 }
-            }
-        };
+            };
 
-        private getSelectedSourceName(): string {
-            if (!this.props.sources) {
-                throw new Error('No sources available');
-            }
+            private handleSelectSource = (e: React.ChangeEvent<HTMLInputElement>) => {
+                if (this.props.sources) {
+                    const selectedSource = this.props.sources.find(
+                        source => source.name === e.target.value
+                    );
 
-            return this.props.selectedSource
-                ? this.props.selectedSource.name
-                : this.props.sources[0].name;
+                    if (selectedSource) {
+                        this.props.selectSource(selectedSource);
+                    }
+                }
+            };
+
+            private getSelectedSourceName(): string {
+                if (!this.props.sources) {
+                    throw new Error('No sources available');
+                }
+
+                return this.props.selectedSource
+                    ? this.props.selectedSource.name
+                    : this.props.sources[0].name;
+            }
         }
-    }
+    )
 );

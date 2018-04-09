@@ -1,42 +1,69 @@
 import * as React from 'react';
-import * as request from 'superagent';
+import { connect } from 'react-redux';
 import { NavComponent } from './NavComponent';
+import { fetchPage, fetchMenu } from '../state/wikiActions';
 
 export interface INavProps {
-    onNavigateToPage: (slug: string) => void;
-    sourceName: string;
+    sourceName: string | null;
     isOpen: boolean;
+    menu: Staticless.GitLab.IWikiPageTreeItem[];
+    loading: boolean;
+    loaded: boolean;
+    error: Error | null;
 }
 
-export interface INavState {
-    pages: Staticless.GitLab.IWikiPageTreeItem[];
-    isLoading: boolean;
+export interface INavDispatch {
+    fetchPage(sourceName: string, slug: string): void;
+    fetchMenu(sourceName: string): void;
 }
 
-export class NavContainer extends React.Component<INavProps, INavState> {
-    constructor(props: INavProps) {
-        super(props);
-        this.state = { pages: [], isLoading: true };
-    }
+const mapStateToProps = (storeState: Client.IState): INavProps => {
+    return {
+        sourceName: storeState.config.selectedSource ? storeState.config.selectedSource.name : null,
+        isOpen: storeState.settings.settings.wikiMenuOpen,
+        menu: storeState.wiki.menu,
+        loaded: storeState.wiki.menuLoaded,
+        loading: storeState.wiki.menuLoading,
+        error: storeState.wiki.menuError
+    };
+};
 
-    public componentDidMount() {
-        request.get(`/wiki/${this.props.sourceName}`).end((err, res) => {
-            if (err) {
-                return console.error(err);
+const mapDispatchToProps = (dispatch: any): INavDispatch => {
+    return {
+        fetchPage: (sourceName, slug) => dispatch(fetchPage(sourceName, slug)),
+        fetchMenu: sourceName => dispatch(fetchMenu(sourceName))
+    };
+};
+
+export const NavContainer = connect(mapStateToProps, mapDispatchToProps)(
+    class extends React.Component<INavProps & INavDispatch> {
+        public componentDidMount() {
+            if (this.props.sourceName) {
+                this.props.fetchMenu(this.props.sourceName);
             }
+        }
 
-            this.setState({ pages: res.body, isLoading: false });
-        });
-    }
+        public componentDidUpdate(oldProps: INavProps) {
+            if (this.props.sourceName && this.props.sourceName !== oldProps.sourceName) {
+                this.props.fetchMenu(this.props.sourceName);
+            }
+        }
 
-    public render() {
-        return (
-            <NavComponent
-                isOpen={this.props.isOpen}
-                onNavigateToPage={this.props.onNavigateToPage}
-                isLoading={this.state.isLoading}
-                pages={this.state.pages}
-            />
-        );
+        public render() {
+            return (
+                <NavComponent
+                    isOpen={this.props.isOpen}
+                    onNavigateToPage={this.onNavigateToPage}
+                    isLoading={this.props.loading}
+                    menu={this.props.menu}
+                />
+            );
+        }
+
+        private onNavigateToPage = (slug: string) => {
+            if (this.props.sourceName) {
+                this.props.fetchPage(this.props.sourceName, slug);
+            }
+        };
     }
-}
+);

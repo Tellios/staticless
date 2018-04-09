@@ -5,7 +5,7 @@ import { MenuItemComponent } from './MenuItemComponent';
 import * as styles from './NavComponent.css';
 
 export interface INavComponentProps {
-    pages: Staticless.GitLab.IWikiPageTreeItem[];
+    menu: Staticless.GitLab.IWikiPageTreeItem[];
     isLoading: boolean;
     isOpen: boolean;
     onNavigateToPage(slug: string): void;
@@ -34,7 +34,7 @@ export class NavComponent extends React.Component<INavComponentProps> {
     }
 
     private renderMenuItems() {
-        return this.props.pages.map((page, index) => {
+        return this.props.menu.map((page, index) => {
             return (
                 <MenuItemComponent
                     key={index}

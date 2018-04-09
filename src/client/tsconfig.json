@@ -11,6 +11,8 @@
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
         "jsx": "react",
         "lib": [
             "es2017",

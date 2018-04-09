@@ -10,38 +10,21 @@ import { Theme } from 'material-ui/styles/createMuiTheme';
 export interface IModalComponentProps {
     title: string;
     open: boolean;
-    onAction(action: 'OK' | 'Cancel'): void;
+    onClose(): void;
 }
 
 export class ModalComponent extends React.Component<IModalComponentProps> {
     public render() {
         return (
-            <Dialog open={this.props.open} onEscapeKeyDown={this.onCancel}>
+            <Dialog open={this.props.open} onEscapeKeyDown={this.props.onClose}>
                 <DialogTitle>{this.props.title}</DialogTitle>
                 <DialogContent>{this.props.children}</DialogContent>
                 <DialogActions>
-                    <Button color="primary" onClick={this.onCancel}>
-                        Cancel
-                    </Button>
-                    <Button color="primary" onClick={this.onSave}>
-                        Save
+                    <Button color="primary" onClick={this.props.onClose}>
+                        Close
                     </Button>
                 </DialogActions>
             </Dialog>
         );
     }
-
-    private onSave = () => {
-        this.props.onAction('OK');
-    };
-
-    private onCancel = () => {
-        this.props.onAction('Cancel');
-    };
-
-    private onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-        if (e.key === 'escape') {
-            this.props.onAction('Cancel');
-        }
-    };
 }

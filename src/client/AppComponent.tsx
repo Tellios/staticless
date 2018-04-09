@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import * as request from 'superagent';
 import Reboot from 'material-ui/Reboot';
 import * as styles from './AppComponent.css';
@@ -7,177 +8,138 @@ import { NavContainer } from './nav/NavContainer';
 import { PageContainer } from './page/PageContainer';
 import { SettingsContainer } from './settings/SettingsContainer';
 import { LoadingComponent } from './components/LoadingComponent';
+import { settingsOpen } from './state/settingsActions';
+import { fetchConfig, selectSource } from './state/configActions';
+import { fetchPage } from './state/wikiActions';
+
+export interface IAppComponentProps {
+    isSettingsOpen: boolean;
+    configLoading: boolean;
+    configLoaded: boolean;
+    config?: Staticless.Config.IFrontend;
+    sources: Staticless.Config.ISource[];
+    selectedSource?: Staticless.Config.ISource;
+    error?: Error;
+}
+
+export interface IAppComponentDispatch {
+    settingsOpen(): void;
+    configLoad(): void;
+    selectSource(source: Staticless.Config.ISource): void;
+    fetchPage(sourceName: string, slug: string): void;
+}
 
 export interface IAppComponentState {
-    config?: Staticless.Config.IFrontend;
     source?: Staticless.Config.ISource;
-    sources?: Staticless.Config.ISource[];
-    error?: any;
     slug?: string;
     isMenuOpen: boolean;
-    isSettingsOpen: boolean;
     isLoadingConfig: boolean;
 }
 
-export class AppComponent extends React.Component<any, IAppComponentState> {
-    private readonly STORE_MENU_OPEN = 'nav-menu-open';
+const mapStateToProps = (state: Client.IState): IAppComponentProps => ({
+    isSettingsOpen: state.settings.open,
+    configLoaded: state.config.loaded,
+    configLoading: state.config.loading,
+    config: state.config.config,
+    sources: state.config.sources,
+    selectedSource: state.config.selectedSource,
+    error: state.config.error
+});
 
-    constructor(props: any) {
-        super(props);
+const mapDispatchToProps = (dispatch: any): IAppComponentDispatch => ({
+    settingsOpen: () => dispatch(settingsOpen()),
+    configLoad: () => dispatch(fetchConfig()),
+    selectSource: source => dispatch(selectSource(source)),
+    fetchPage: (sourceName, slug) => dispatch(fetchPage(sourceName, slug))
+});
 
-        const isOpenValue = localStorage[this.STORE_MENU_OPEN];
-        const isOpen = isOpenValue === 'true';
+export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(
+    class extends React.Component<IAppComponentProps & IAppComponentDispatch> {
+        public componentDidMount() {
+            window.onpopstate = event => {
+                console.log(event.state);
+            };
 
-        this.state = { isMenuOpen: isOpen, isSettingsOpen: false, isLoadingConfig: false };
-    }
-
-    public componentDidMount() {
-        window.onpopstate = event => {
-            this.updateStateUsingLocation();
-        };
-
-        this.fetchConfig();
-        this.updateStateUsingLocation();
-    }
-
-    public render() {
-        return (
-            <div className={styles.Root}>
-                <Reboot />
-                {this.state.config && (
-                    <HeaderComponent
-                        title={this.state.config.title}
-                        sources={this.state.sources}
-                        selectedSource={this.state.source}
-                        onSourceSelected={this.handleSourceSelected}
-                        onMenuClick={this.handleMenuClick}
-                        onTitleClick={this.handleTitleClick}
-                        onSettingsClick={this.handleSettingsOpen}
-                    />
-                )}
-                <div className={styles.Container}>
-                    {this.state.source && (
-                        <NavContainer
-                            sourceName={this.state.source.name}
-                            onNavigateToPage={this.handleNavigateToPage}
-                            isOpen={this.state.isMenuOpen}
-                        />
-                    )}
-                    {this.renderContent()}
-                </div>
-                {this.state.isSettingsOpen && (
-                    <SettingsContainer onClose={this.handleSettingsClose} />
-                )}
-            </div>
-        );
-    }
-
-    private renderContent() {
-        if (this.state.isLoadingConfig) {
-            return <LoadingComponent />;
-        } else if (this.state.error) {
-            return <div>{this.state.error.toString()}</div>;
-        } else if (this.state.source && this.state.slug) {
-            return <PageContainer sourceName={this.state.source.name} slug={this.state.slug} />;
-        } else {
-            return <div />;
+            this.props.configLoad();
         }
-    }
 
-    private handleSourceSelected = (source: Staticless.Config.ISource) => {
-        this.setState({ source }, () => {
-            this.handleNavigateToPage(source.homeSlug);
-        });
-    };
+        public componentDidUpdate(oldProps: IAppComponentProps & IAppComponentDispatch) {
+            const { sources, selectedSource, configLoaded, config } = this.props;
 
-    private handleMenuClick = () => {
-        const isOpen = !this.state.isMenuOpen;
-        localStorage.setItem(this.STORE_MENU_OPEN, String(isOpen));
-        this.setState({ isMenuOpen: isOpen });
-    };
+            if (configLoaded && config !== oldProps.config) {
+                if (window.location.pathname === '/') {
+                    this.props.selectSource(sources[0]);
+                } else {
+                    const path = window.location.pathname.substr(1);
 
-    private handleSettingsOpen = () => {
-        this.setState({ isSettingsOpen: true });
-    };
+                    if (path.length > 0) {
+                        const pathSplit = path.split('/');
 
-    private handleSettingsClose = () => {
-        this.setState({ isSettingsOpen: false });
-    };
+                        if (pathSplit.length > 0) {
+                            const source = this.props.sources.find(
+                                s => decodeURIComponent(pathSplit[0]) === s.name
+                            );
 
-    private handleNavigateToPage = (slug: string) => {
-        if (this.state.source) {
-            const sourceName = encodeURIComponent(this.state.source.name);
-            const url = `${window.location.origin}/${sourceName}/${slug}`;
-            window.history.pushState({ sourceName, slug }, slug, url);
-            this.setState({ slug });
-        }
-    };
+                            if (source) {
+                                const slug =
+                                    pathSplit.length > 1
+                                        ? pathSplit.slice(1).join('/')
+                                        : source.homeSlug;
 
-    private handleTitleClick = () => {
-        if (this.state.config && this.state.source && this.state.source.homeSlug) {
-            this.handleNavigateToPage(this.state.source.homeSlug);
-        }
-    };
-
-    private fetchConfig() {
-        request('/frontendConfig').end((err, res) => {
-            if (err) {
-                this.setState({ error: err });
-                return;
-            }
-
-            const config: Staticless.Config.IFrontend = res.body;
-
-            this.setState({
-                config
-            });
-
-            document.title = config.title;
-
-            request('/frontendConfig/sources').end((sourcesErr, sourcesRes) => {
-                if (sourcesErr) {
-                    this.setState({ error: sourcesErr });
-                    return;
-                }
-
-                const sources: Staticless.Config.ISource[] = sourcesRes.body;
-
-                this.setState({
-                    sources
-                });
-
-                if (sources.length > 0) {
-                    if (window.location.pathname === '/') {
-                        this.setState({
-                            source: sources[0],
-                            slug: sources[0].homeSlug
-                        });
-                    } else {
-                        this.updateStateUsingLocation();
+                                this.props.selectSource(source);
+                                this.props.fetchPage(source.name, slug);
+                            }
+                        }
                     }
                 }
-            });
-        });
-    }
-
-    private updateStateUsingLocation() {
-        const path = window.location.pathname.substr(1);
-
-        if (this.state.sources && path.length > 0) {
-            const pathSplit = path.split('/');
-
-            if (pathSplit.length > 0) {
-                const source = this.state.sources.find(
-                    s => decodeURIComponent(pathSplit[0]) === s.name
-                );
-
-                if (source) {
-                    const slug =
-                        pathSplit.length > 1 ? pathSplit.slice(1).join('/') : source.homeSlug;
-
-                    this.setState({ source, slug });
-                }
+            } else if (selectedSource && selectedSource !== oldProps.selectedSource) {
+                console.log('SELECTED SOURCE CHANGED', selectedSource);
             }
         }
+
+        public render() {
+            return (
+                <div className={styles.Root}>
+                    <Reboot />
+                    {this.props.config && <HeaderComponent />}
+                    <div className={styles.Container}>
+                        {this.props.selectedSource && <NavContainer />}
+                        {this.renderContent()}
+                    </div>
+                    {this.props.isSettingsOpen && <SettingsContainer />}
+                </div>
+            );
+        }
+
+        private renderContent() {
+            if (this.props.configLoading) {
+                return <LoadingComponent />;
+            } else if (this.props.error) {
+                return <div>{this.props.error.toString()}</div>;
+            } else if (this.props.selectedSource) {
+                return <PageContainer />;
+            } else {
+                return <div />;
+            }
+        }
+
+        private handleNavigateToPage = (slug: string) => {
+            if (this.props.selectedSource) {
+                const sourceName = encodeURIComponent(this.props.selectedSource.name);
+                const url = `${window.location.origin}/${sourceName}/${slug}`;
+                window.history.pushState({ sourceName, slug }, slug, url);
+                this.props.fetchPage(sourceName, slug);
+            }
+        };
+
+        private handleTitleClick = () => {
+            if (
+                this.props.config &&
+                this.props.selectedSource &&
+                this.props.selectedSource.homeSlug
+            ) {
+                this.handleNavigateToPage(this.props.selectedSource.homeSlug);
+            }
+        };
     }
-}
+);

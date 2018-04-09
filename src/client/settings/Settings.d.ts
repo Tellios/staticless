@@ -9,5 +9,11 @@ declare namespace Client {
 
     interface ISettings {
         codeTheme: CodeTheme;
+        wikiMenuOpen: boolean;
+    }
+
+    interface ISettingsState {
+        settings: ISettings;
+        open: boolean;
     }
 }
