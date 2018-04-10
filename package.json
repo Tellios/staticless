@@ -5,6 +5,7 @@
   "main": "dist/run.js",
   "scripts": {
     "pretty": "prettier --config .prettierrc.json --write \"src/**/*.{ts,tsx}\"",
+    "pretty-ci": "prettier --config .prettierrc.json --list-different \"src/**/*.{ts,tsx}\"",
     "test": "jest",
     "test:watch": "jest --watchAll",
     "cleanDist": "rimraf dist",
