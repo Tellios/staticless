@@ -10,10 +10,11 @@ export interface INavProps {
     loading: boolean;
     loaded: boolean;
     error: Error | null;
+    selectedPage: Staticless.GitLab.IWikiPage | null;
 }
 
 export interface INavDispatch {
-    fetchPage(sourceName: string, slug: string): void;
+    fetchPage(sourceName: string, slug: string, addToHistory: boolean): void;
     fetchMenu(sourceName: string): void;
 }
 
@@ -24,13 +25,15 @@ const mapStateToProps = (storeState: Client.IState): INavProps => {
         menu: storeState.wiki.menu,
         loaded: storeState.wiki.menuLoaded,
         loading: storeState.wiki.menuLoading,
-        error: storeState.wiki.menuError
+        error: storeState.wiki.menuError,
+        selectedPage: storeState.wiki.page
     };
 };
 
 const mapDispatchToProps = (dispatch: any): INavDispatch => {
     return {
-        fetchPage: (sourceName, slug) => dispatch(fetchPage(sourceName, slug)),
+        fetchPage: (sourceName, slug, addToHistory) =>
+            dispatch(fetchPage(sourceName, slug, addToHistory)),
         fetchMenu: sourceName => dispatch(fetchMenu(sourceName))
     };
 };
@@ -62,7 +65,7 @@ export const NavContainer = connect(mapStateToProps, mapDispatchToProps)(
 
         private onNavigateToPage = (slug: string) => {
             if (this.props.sourceName) {
-                this.props.fetchPage(this.props.sourceName, slug);
+                this.props.fetchPage(this.props.sourceName, slug, true);
             }
         };
     }

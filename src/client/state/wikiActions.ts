@@ -25,17 +25,23 @@ export const fetchMenu = (sourceName: string) => {
     };
 };
 
-export const fetchPage = (sourceName: string, slug: string) => {
-    console.log('fetchPage');
+export const fetchPage = (sourceName: string, slug: string, addToHistory: boolean) => {
     return (dispatch: any) => {
-        console.log('fetchPage - inner');
+        const historyState = { sourceName, slug };
+        sourceName = encodeURIComponent(sourceName);
+
+        if (addToHistory) {
+            const windowUrl = `${window.location.origin}/${sourceName}/${slug}`;
+            window.history.pushState(historyState, historyState.slug, windowUrl);
+        }
+
         dispatch({
             type: 'FETCH_PAGE_PENDING'
         });
 
-        const path = `/wiki/${encodeURIComponent(sourceName)}/${encodeURIComponent(slug)}`;
+        const apiUrl = `/wiki/${sourceName}/${slug}`;
 
-        request(path).end((err, res) => {
+        request(apiUrl).end((err, res) => {
             if (err) {
                 return dispatch({
                     type: 'FETCH_PAGE_REJECTED',

@@ -26,7 +26,7 @@ export interface IAppComponentDispatch {
     settingsOpen(): void;
     configLoad(): void;
     selectSource(source: Staticless.Config.ISource): void;
-    fetchPage(sourceName: string, slug: string): void;
+    fetchPage(sourceName: string, slug: string, addToHistory: boolean): void;
 }
 
 export interface IAppComponentState {
@@ -50,14 +50,29 @@ const mapDispatchToProps = (dispatch: any): IAppComponentDispatch => ({
     settingsOpen: () => dispatch(settingsOpen()),
     configLoad: () => dispatch(fetchConfig()),
     selectSource: source => dispatch(selectSource(source)),
-    fetchPage: (sourceName, slug) => dispatch(fetchPage(sourceName, slug))
+    fetchPage: (sourceName, slug, addToHistory) =>
+        dispatch(fetchPage(sourceName, slug, addToHistory))
 });
 
 export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(
     class extends React.Component<IAppComponentProps & IAppComponentDispatch> {
         public componentDidMount() {
             window.onpopstate = event => {
-                console.log(event.state);
+                if (!event.state) {
+                    return;
+                }
+
+                console.log(event);
+                const { sourceName, slug } = event.state;
+
+                if (
+                    this.props.selectedSource &&
+                    this.props.selectedSource.name !== decodeURIComponent(sourceName)
+                ) {
+                    this.props.selectSource(sourceName);
+                }
+
+                this.props.fetchPage(sourceName, slug, false);
             };
 
             this.props.configLoad();
@@ -87,7 +102,7 @@ export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(
                                         : source.homeSlug;
 
                                 this.props.selectSource(source);
-                                this.props.fetchPage(source.name, slug);
+                                this.props.fetchPage(source.name, slug, false);
                             }
                         }
                     }
@@ -122,24 +137,5 @@ export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(
                 return <div />;
             }
         }
-
-        private handleNavigateToPage = (slug: string) => {
-            if (this.props.selectedSource) {
-                const sourceName = encodeURIComponent(this.props.selectedSource.name);
-                const url = `${window.location.origin}/${sourceName}/${slug}`;
-                window.history.pushState({ sourceName, slug }, slug, url);
-                this.props.fetchPage(sourceName, slug);
-            }
-        };
-
-        private handleTitleClick = () => {
-            if (
-                this.props.config &&
-                this.props.selectedSource &&
-                this.props.selectedSource.homeSlug
-            ) {
-                this.handleNavigateToPage(this.props.selectedSource.homeSlug);
-            }
-        };
     }
 );

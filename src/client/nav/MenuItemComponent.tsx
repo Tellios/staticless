@@ -93,7 +93,6 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
 
     private isSelected(menuItem: Staticless.GitLab.IWikiPageTreeItem) {
         const slugPath = this.getWindowSlugPath();
-
         return menuItem.page && menuItem.page.slug === slugPath;
     }
 

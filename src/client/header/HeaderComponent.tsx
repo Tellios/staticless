@@ -23,7 +23,7 @@ export interface IHeaderComponentProps {
 export interface IHeaderComponentDispatch {
     selectSource(source: Staticless.Config.ISource): void;
     settingsSave(settings: Partial<Client.ISettings>): void;
-    fetchPage(sourceName: string, slug: string): void;
+    fetchPage(sourceName: string, slug: string, addToHistory: boolean): void;
     settingsOpen(): void;
 }
 
@@ -58,7 +58,8 @@ const mapDispatchToProps = (dispatch: any): IHeaderComponentDispatch => {
         settingsSave: settings => dispatch(settingsSet(settings)),
         settingsOpen: () => dispatch(settingsOpen()),
         selectSource: source => dispatch(selectSource(source)),
-        fetchPage: (sourceName, slug) => dispatch(fetchPage(sourceName, slug))
+        fetchPage: (sourceName, slug, addToHistory) =>
+            dispatch(fetchPage(sourceName, slug, addToHistory))
     };
 };
 
@@ -144,7 +145,8 @@ export const HeaderComponent: any = connect(mapStateToProps, mapDispatchToProps)
                 if (this.props.selectedSource) {
                     this.props.fetchPage(
                         this.props.selectedSource.name,
-                        this.props.selectedSource.homeSlug
+                        this.props.selectedSource.homeSlug,
+                        true
                     );
                 }
             };
@@ -157,6 +159,7 @@ export const HeaderComponent: any = connect(mapStateToProps, mapDispatchToProps)
 
                     if (selectedSource) {
                         this.props.selectSource(selectedSource);
+                        this.props.fetchPage(selectedSource.name, selectedSource.homeSlug, true);
                     }
                 }
             };
