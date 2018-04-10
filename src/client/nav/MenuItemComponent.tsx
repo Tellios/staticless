@@ -4,6 +4,7 @@ import * as styles from './MenuItemComponent.css';
 
 export interface IMenuItemProps {
     menuItem: Staticless.GitLab.IWikiPageTreeItem;
+    parentSlug?: string;
     onClick: (slug: string) => void;
 }
 
@@ -54,13 +55,25 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
                         const key = `${index}-${child.slugPart}`;
                         return (
                             <div className={styles.MenuItemChild} key={key}>
-                                <MenuItemComponent menuItem={child} onClick={this.props.onClick} />
+                                <MenuItemComponent
+                                    menuItem={child}
+                                    parentSlug={this.getSlug()}
+                                    onClick={this.props.onClick}
+                                />
                             </div>
                         );
                     }
                 )}
             </div>
         );
+    }
+
+    private getSlug() {
+        if (this.props.parentSlug) {
+            return `${this.props.parentSlug}/${this.props.menuItem.slugPart}`;
+        }
+
+        return this.props.menuItem.slugPart;
     }
 
     private getIcon() {
@@ -85,7 +98,7 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
         const slugPath = this.getWindowSlugPath();
 
         if (slugPath && menuItem.children.length > 0) {
-            return slugPath.startsWith(menuItem.slugPart);
+            return slugPath.startsWith(this.getSlug());
         }
 
         return false;

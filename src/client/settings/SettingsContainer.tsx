@@ -20,7 +20,7 @@ const mapStateToProps = (state: Client.IState): ISettingsContainerProps => ({
 
 const mapDispatchToProps = (dispatch: any): ISettingsContainerDispatch => ({
     onClose: () => dispatch(settingsClose()),
-    save: (settings) => dispatch(settingsSet(settings))
+    save: settings => dispatch(settingsSet(settings))
 });
 
 export const SettingsContainer = connect(mapStateToProps, mapDispatchToProps)(

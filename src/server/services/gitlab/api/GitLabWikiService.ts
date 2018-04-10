@@ -166,14 +166,14 @@ export class GitLabWikiService {
                 tree.push({
                     children: [],
                     page,
-                    slugPart: slug,
+                    slugPart: part,
                     title: this.getReadableTitle(page.title)
                 });
             } else {
                 const node = {
                     children: [],
                     page: null,
-                    slugPart: slug,
+                    slugPart: part,
                     title: this.getReadableTitle(part)
                 };
                 tree.push(node);

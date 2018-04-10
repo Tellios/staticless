@@ -12,10 +12,7 @@ const initialState: Client.IWikiState = {
     pageLoading: false
 };
 
-export const wikiReducer: Reducer<Client.IWikiState> = (
-    state = initialState,
-    action: Action
-) => {
+export const wikiReducer: Reducer<Client.IWikiState> = (state = initialState, action: Action) => {
     switch (action.type) {
         case 'FETCH_MENU_PENDING':
             return {
