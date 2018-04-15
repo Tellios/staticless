@@ -1,12 +1,24 @@
 import * as request from 'superagent';
 import { ActionCreator } from 'redux';
+import { updateWindowHistory } from './updateWindowHistory';
 
 export const selectSource: ActionCreator<Client.IAction<Staticless.Config.ISource>> = (
-    source: Staticless.Config.ISource
-) => ({
-    type: 'CONFIG_SELECT_SOURCE',
-    payload: source
-});
+    source: Staticless.Config.ISource,
+    addToHistory: boolean
+) => {
+    if (addToHistory) {
+        updateWindowHistory({
+            type: 'source',
+            sourceName: source.name,
+            slug: source.homeSlug
+        });
+    }
+
+    return {
+        type: 'CONFIG_SELECT_SOURCE',
+        payload: source
+    };
+};
 
 export const fetchConfig = () => {
     return (dispatch: any) => {

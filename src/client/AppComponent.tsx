@@ -25,7 +25,7 @@ export interface IAppComponentProps {
 export interface IAppComponentDispatch {
     settingsOpen(): void;
     configLoad(): void;
-    selectSource(source: Staticless.Config.ISource): void;
+    selectSource(source: Staticless.Config.ISource, addToHistory: boolean): void;
     fetchPage(sourceName: string, slug: string, addToHistory: boolean): void;
 }
 
@@ -49,7 +49,7 @@ const mapStateToProps = (state: Client.IState): IAppComponentProps => ({
 const mapDispatchToProps = (dispatch: any): IAppComponentDispatch => ({
     settingsOpen: () => dispatch(settingsOpen()),
     configLoad: () => dispatch(fetchConfig()),
-    selectSource: source => dispatch(selectSource(source)),
+    selectSource: (source, addToHistory) => dispatch(selectSource(source, addToHistory)),
     fetchPage: (sourceName, slug, addToHistory) =>
         dispatch(fetchPage(sourceName, slug, addToHistory))
 });
@@ -58,18 +58,20 @@ export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(
     class extends React.Component<IAppComponentProps & IAppComponentDispatch> {
         public componentDidMount() {
             window.onpopstate = event => {
+                const state: Client.PushState = event.state;
+
                 if (!event.state) {
                     return;
                 }
 
-                console.log(event);
-                const { sourceName, slug } = event.state;
+                const { sourceName, slug } = state;
 
-                if (
-                    this.props.selectedSource &&
-                    this.props.selectedSource.name !== decodeURIComponent(sourceName)
-                ) {
-                    this.props.selectSource(sourceName);
+                if (this.props.selectedSource && this.props.selectedSource.name !== sourceName) {
+                    const source = this.props.sources.find(source => source.name === sourceName);
+
+                    if (source) {
+                        this.props.selectSource(source, false);
+                    }
                 }
 
                 this.props.fetchPage(sourceName, slug, false);
@@ -83,7 +85,7 @@ export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(
 
             if (configLoaded && config !== oldProps.config) {
                 if (window.location.pathname === '/') {
-                    this.props.selectSource(sources[0]);
+                    this.props.selectSource(sources[0], false);
                 } else {
                     const path = window.location.pathname.substr(1);
 
@@ -101,14 +103,12 @@ export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(
                                         ? pathSplit.slice(1).join('/')
                                         : source.homeSlug;
 
-                                this.props.selectSource(source);
+                                this.props.selectSource(source, false);
                                 this.props.fetchPage(source.name, slug, false);
                             }
                         }
                     }
                 }
-            } else if (selectedSource && selectedSource !== oldProps.selectedSource) {
-                console.log('SELECTED SOURCE CHANGED', selectedSource);
             }
         }
 

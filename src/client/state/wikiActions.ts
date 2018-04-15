@@ -1,5 +1,6 @@
 import { ActionCreator } from 'redux';
 import * as request from 'superagent';
+import { updateWindowHistory } from './updateWindowHistory';
 
 export const fetchMenu = (sourceName: string) => {
     return (dispatch: any) => {
@@ -27,13 +28,15 @@ export const fetchMenu = (sourceName: string) => {
 
 export const fetchPage = (sourceName: string, slug: string, addToHistory: boolean) => {
     return (dispatch: any) => {
-        const historyState = { sourceName, slug };
-        sourceName = encodeURIComponent(sourceName);
-
         if (addToHistory) {
-            const windowUrl = `${window.location.origin}/${sourceName}/${slug}`;
-            window.history.pushState(historyState, historyState.slug, windowUrl);
+            updateWindowHistory({
+                type: 'page',
+                sourceName,
+                slug
+            });
         }
+
+        sourceName = encodeURIComponent(sourceName);
 
         dispatch({
             type: 'FETCH_PAGE_PENDING'

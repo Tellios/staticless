@@ -57,7 +57,7 @@ const mapDispatchToProps = (dispatch: any): IHeaderComponentDispatch => {
     return {
         settingsSave: settings => dispatch(settingsSet(settings)),
         settingsOpen: () => dispatch(settingsOpen()),
-        selectSource: source => dispatch(selectSource(source)),
+        selectSource: source => dispatch(selectSource(source, true)),
         fetchPage: (sourceName, slug, addToHistory) =>
             dispatch(fetchPage(sourceName, slug, addToHistory))
     };
@@ -159,7 +159,7 @@ export const HeaderComponent: any = connect(mapStateToProps, mapDispatchToProps)
 
                     if (selectedSource) {
                         this.props.selectSource(selectedSource);
-                        this.props.fetchPage(selectedSource.name, selectedSource.homeSlug, true);
+                        this.props.fetchPage(selectedSource.name, selectedSource.homeSlug, false);
                     }
                 }
             };
