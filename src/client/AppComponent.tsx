@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import * as request from 'superagent';
-import Reboot from 'material-ui/Reboot';
 import * as styles from './AppComponent.css';
-import { HeaderComponent } from './header/HeaderComponent';
+import { HeaderContainer } from './header/HeaderContainer';
 import { NavContainer } from './nav/NavContainer';
 import { PageContainer } from './page/PageContainer';
 import { SettingsContainer } from './settings/SettingsContainer';
@@ -61,7 +60,7 @@ export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(
                 const state: Client.PushState = event.state;
 
                 if (!event.state) {
-                    return;
+                    return this.navigateToCurrentHref();
                 }
 
                 const { sourceName, slug } = state;
@@ -87,27 +86,7 @@ export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(
                 if (window.location.pathname === '/') {
                     this.props.selectSource(sources[0], false);
                 } else {
-                    const path = window.location.pathname.substr(1);
-
-                    if (path.length > 0) {
-                        const pathSplit = path.split('/');
-
-                        if (pathSplit.length > 0) {
-                            const source = this.props.sources.find(
-                                s => decodeURIComponent(pathSplit[0]) === s.name
-                            );
-
-                            if (source) {
-                                const slug =
-                                    pathSplit.length > 1
-                                        ? pathSplit.slice(1).join('/')
-                                        : source.homeSlug;
-
-                                this.props.selectSource(source, false);
-                                this.props.fetchPage(source.name, slug, false);
-                            }
-                        }
-                    }
+                    this.navigateToCurrentHref();
                 }
             }
         }
@@ -115,8 +94,7 @@ export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(
         public render() {
             return (
                 <div className={styles.Root}>
-                    <Reboot />
-                    {this.props.config && <HeaderComponent />}
+                    {this.props.config && <HeaderContainer />}
                     <div className={styles.Container}>
                         {this.props.selectedSource && <NavContainer />}
                         {this.renderContent()}
@@ -135,6 +113,28 @@ export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(
                 return <PageContainer />;
             } else {
                 return <div />;
+            }
+        }
+
+        private navigateToCurrentHref() {
+            const path = window.location.pathname.substr(1);
+
+            if (path.length > 0) {
+                const pathSplit = path.split('/');
+
+                if (pathSplit.length > 0) {
+                    const source = this.props.sources.find(
+                        s => decodeURIComponent(pathSplit[0]) === s.name
+                    );
+
+                    if (source) {
+                        const slug =
+                            pathSplit.length > 1 ? pathSplit.slice(1).join('/') : source.homeSlug;
+
+                        this.props.selectSource(source, false);
+                        this.props.fetchPage(source.name, slug, false);
+                    }
+                }
             }
         }
     }

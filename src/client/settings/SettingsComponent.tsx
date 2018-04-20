@@ -44,7 +44,7 @@ export const SettingsComponent = decorate<ISettingsComponentProps>(
             );
         }
 
-        private onCodeThemeSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+        private onCodeThemeSelected = (e: React.ChangeEvent<HTMLSelectElement>) => {
             this.props.onCodeThemeSelected(e.target.value as Client.CodeTheme);
         };
     }

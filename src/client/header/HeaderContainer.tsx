@@ -3,15 +3,14 @@ import { connect } from 'react-redux';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
-import { InputLabel } from 'material-ui/Input';
 import IconButton from 'material-ui/IconButton';
-import Select from 'material-ui/Select';
-import { MenuItem } from 'material-ui/Menu';
+import Icon from 'material-ui/Icon';
 import { withStyles, WithStyles } from 'material-ui/styles';
 import { Theme } from 'material-ui/styles/createMuiTheme';
 import { settingsSet, settingsOpen } from '../state/settingsActions';
 import { selectSource } from '../state/configActions';
 import { fetchPage } from '../state/wikiActions';
+import { SourceSelectorComponent } from './SourceSelectorComponent';
 
 export interface IHeaderComponentProps {
     title: string;
@@ -28,19 +27,9 @@ export interface IHeaderComponentDispatch {
 }
 
 const decorate = withStyles((theme: Theme) => ({
-    root: {
-        marginRight: theme.spacing.unit,
-        color: theme.palette.common.white
-    },
     headerText: {
         cursor: 'pointer',
         marginLeft: theme.spacing.unit
-    },
-    select: {
-        color: theme.palette.common.white
-    },
-    icon: {
-        color: theme.palette.common.white
     }
 }));
 
@@ -63,15 +52,10 @@ const mapDispatchToProps = (dispatch: any): IHeaderComponentDispatch => {
     };
 };
 
-export const HeaderComponent: any = connect(mapStateToProps, mapDispatchToProps)(
+export const HeaderContainer: any = connect(mapStateToProps, mapDispatchToProps)(
     decorate(
         class extends React.Component<
-            IHeaderComponentProps &
-                IHeaderComponentDispatch &
-                WithStyles<'root'> &
-                WithStyles<'headerText'> &
-                WithStyles<'select'> &
-                WithStyles<'icon'>
+            IHeaderComponentProps & IHeaderComponentDispatch & WithStyles<'headerText'>
         > {
             public render() {
                 return (
@@ -83,45 +67,27 @@ export const HeaderComponent: any = connect(mapStateToProps, mapDispatchToProps)
                                 title="Menu"
                                 onClick={this.handleMenuClick}
                             >
-                                menu
+                                <Icon>menu</Icon>
                             </IconButton>
 
-                            <Typography type="title" color="inherit" style={{ flex: 1 }}>
-                                <span
-                                    className={this.props.classes.headerText}
-                                    onClick={this.handleTitleClick}
-                                >
-                                    {this.props.title}
-                                </span>
+                            <Typography
+                                className={this.props.classes.headerText}
+                                title={this.props.title}
+                                onClick={this.handleTitleClick}
+                                color="inherit"
+                                variant="title"
+                                style={{ flex: 1 }}
+                            >
+                                {this.props.title}
                             </Typography>
 
                             {this.props.sources &&
                                 this.props.sources.length > 1 && (
-                                    <span>
-                                        <InputLabel classes={{ root: this.props.classes.root }}>
-                                            Selected Wiki:
-                                        </InputLabel>
-                                        <Select
-                                            classes={{
-                                                select: this.props.classes.select,
-                                                icon: this.props.classes.icon
-                                            }}
-                                            value={this.getSelectedSourceName()}
-                                            onChange={this.handleSelectSource}
-                                            disableUnderline={true}
-                                        >
-                                            {this.props.sources.map((source, index) => {
-                                                const selected =
-                                                    this.props.selectedSource &&
-                                                    this.props.selectedSource.name === source.name;
-                                                return (
-                                                    <MenuItem key={index} value={source.name}>
-                                                        {source.name}
-                                                    </MenuItem>
-                                                );
-                                            })}
-                                        </Select>
-                                    </span>
+                                    <SourceSelectorComponent
+                                        sources={this.props.sources}
+                                        selectedSource={this.props.selectedSource}
+                                        onSelectSource={this.handleSelectSource}
+                                    />
                                 )}
 
                             <IconButton
@@ -130,7 +96,7 @@ export const HeaderComponent: any = connect(mapStateToProps, mapDispatchToProps)
                                 title="Settings"
                                 onClick={this.props.settingsOpen}
                             >
-                                settings
+                                <Icon>settings</Icon>
                             </IconButton>
                         </Toolbar>
                     </AppBar>
@@ -151,7 +117,7 @@ export const HeaderComponent: any = connect(mapStateToProps, mapDispatchToProps)
                 }
             };
 
-            private handleSelectSource = (e: React.ChangeEvent<HTMLInputElement>) => {
+            private handleSelectSource = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 if (this.props.sources) {
                     const selectedSource = this.props.sources.find(
                         source => source.name === e.target.value
@@ -163,16 +129,6 @@ export const HeaderComponent: any = connect(mapStateToProps, mapDispatchToProps)
                     }
                 }
             };
-
-            private getSelectedSourceName(): string {
-                if (!this.props.sources) {
-                    throw new Error('No sources available');
-                }
-
-                return this.props.selectedSource
-                    ? this.props.selectedSource.name
-                    : this.props.sources[0].name;
-            }
         }
     )
 );
