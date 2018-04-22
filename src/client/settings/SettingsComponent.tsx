@@ -1,17 +1,16 @@
-import * as React from "react";
-import { ModalComponent } from "../components/ModalComponent";
-import Input, { InputLabel } from "material-ui/Input";
-import { MenuItem } from "material-ui/Menu";
-import { FormControl, FormHelperText } from "material-ui/Form";
-import Select from "material-ui/Select";
-import { withStyles, WithStyles } from "material-ui/styles";
-import { Theme } from "material-ui/styles/createMuiTheme";
+import * as React from 'react';
+import { ModalComponent } from '../components/ModalComponent';
+import Input, { InputLabel } from 'material-ui/Input';
+import { MenuItem } from 'material-ui/Menu';
+import { FormControl, FormHelperText } from 'material-ui/Form';
+import Select from 'material-ui/Select';
+import { withStyles, WithStyles } from 'material-ui/styles';
+import { Theme } from 'material-ui/styles/createMuiTheme';
 
 export interface ISettingsComponentProps {
     settings: Client.ISettings;
     onCodeThemeSelected(theme: Client.CodeTheme): void;
-    onSave(): void;
-    onCancel(): void;
+    onClose(): void;
 }
 
 const decorate = withStyles((theme: Theme) => ({
@@ -22,10 +21,10 @@ const decorate = withStyles((theme: Theme) => ({
 }));
 
 export const SettingsComponent = decorate<ISettingsComponentProps>(
-    class extends React.Component<ISettingsComponentProps & WithStyles<"formControl">> {
+    class extends React.Component<ISettingsComponentProps & WithStyles<'formControl'>> {
         public render() {
             return (
-                <ModalComponent title="Settings" onAction={this.onAction} open={true}>
+                <ModalComponent title="Settings" onClose={this.props.onClose} open={true}>
                     <FormControl className={this.props.classes.formControl}>
                         <InputLabel htmlFor="code-theme">Code theme</InputLabel>
                         <Select
@@ -45,16 +44,8 @@ export const SettingsComponent = decorate<ISettingsComponentProps>(
             );
         }
 
-        private onAction = (action: "OK" | "Cancel") => {
-            if (action === "OK") {
-                this.props.onSave();
-            } else {
-                this.props.onCancel();
-            }
-        }
-
-        private onCodeThemeSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+        private onCodeThemeSelected = (e: React.ChangeEvent<HTMLSelectElement>) => {
             this.props.onCodeThemeSelected(e.target.value as Client.CodeTheme);
-        }
+        };
     }
 );

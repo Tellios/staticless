@@ -1,7 +1,6 @@
+import { settingsRepository } from './SettingsRepository';
 
-import { settingsRepository } from "./SettingsRepository";
-
-const CSS_THEME_ID = "theme-css-element";
+const CSS_THEME_ID = 'theme-css-element';
 
 class ThemeLoader {
     public loadTheme(theme?: Client.CodeTheme) {
@@ -16,9 +15,9 @@ class ThemeLoader {
     }
 
     private createCssElement(theme: Client.CodeTheme) {
-        const link = document.createElement("link");
+        const link = document.createElement('link');
         link.id = CSS_THEME_ID;
-        link.rel = "stylesheet";
+        link.rel = 'stylesheet';
         link.href = `/code-block-styles/${theme}.css`;
 
         return link;
@@ -33,8 +32,7 @@ class ThemeLoader {
     }
 
     private addCssElement(cssElement: HTMLLinkElement) {
-        document.getElementsByTagName("head")[0]
-            .appendChild(cssElement);
+        document.getElementsByTagName('head')[0].appendChild(cssElement);
     }
 }
 

@@ -1,52 +1,38 @@
-import { readJSONSync } from "fs-extra";
-import * as path from "path";
-import * as process from "process";
-import { IConfig } from "./IConfig";
-import * as nconf from "nconf";
+import { readJSONSync } from 'fs-extra';
+import * as path from 'path';
+import * as process from 'process';
+import { IConfig } from './IConfig';
+import * as nconf from 'nconf';
 
 export function loadConfig(): IConfig {
     nconf
-        .argv()
-        .env({ lowerCase: true, separator: "_" })
-        .file("workingDirectory", path.join(process.cwd(), "staticless.json"))
-        .file("appDirectory", path.join(global.appRoot, "config", "staticless.json"))
+        .file('workingDirectory', path.join(process.cwd(), 'staticless.json'))
+        .file('appDirectory', path.join(global.appRoot, 'config', 'staticless.json'))
         .defaults({
             server: {
-                address: "0.0.0.0",
+                address: '0.0.0.0',
                 port: 8080
             },
             cache: {
                 time: 30
             }
         })
-        .required([
-            "frontend:title",
-            "server:port",
-            "server:address",
-            "gitlab:url",
-            "gitlab:apitoken",
-            "gitlab:projectid"
-        ]);
+        .required(['frontend:title', 'server:port', 'server:address', 'sources']);
 
     return {
         frontend: {
-            title: nconf.get("frontend:title"),
-            homeSlug: nconf.get("frontend:homeslug")
+            title: nconf.get('frontend:title')
         },
 
         server: {
-            address: nconf.get("server:address"),
-            port: nconf.get("server:port")
+            address: nconf.get('server:address'),
+            port: nconf.get('server:port')
         },
 
-        gitlab: {
-            apiToken: nconf.get("gitlab:apitoken"),
-            projectId: nconf.get("gitlab:projectid"),
-            url: nconf.get("gitlab:url")
-        },
+        sources: nconf.get('sources'),
 
         cache: {
-            time: nconf.get("cache:time")
+            time: nconf.get('cache:time')
         }
     };
 }

@@ -28,6 +28,10 @@ declare namespace Staticless {
     namespace Config {
         interface IFrontend {
             title: string;
+        }
+
+        interface ISource {
+            name: string;
             homeSlug: string;
         }
     }

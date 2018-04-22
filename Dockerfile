@@ -13,4 +13,4 @@ EXPOSE 8080
 
 USER node
 
-CMD ["node", "run.js", "--server:port", "8080", "--server:address", "0.0.0.0"]
+CMD ["node", "run.js"]

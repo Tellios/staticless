@@ -1,9 +1,10 @@
-import * as React from "react";
-import * as classNames from "classnames";
-import * as styles from "./MenuItemComponent.css";
+import * as React from 'react';
+import * as classNames from 'classnames';
+import * as styles from './MenuItemComponent.css';
 
 export interface IMenuItemProps {
     menuItem: Staticless.GitLab.IWikiPageTreeItem;
+    parentSlug?: string;
     onClick: (slug: string) => void;
 }
 
@@ -18,28 +19,30 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
     }
 
     public render(): any {
-        const labelClassName = classNames(
-            styles.MenuItemLabelText,
-            { [styles.MenuItemLabelTextSelected]: this.isSelected(this.props.menuItem) }
-        );
+        const labelClassName = classNames(styles.MenuItemLabelText, {
+            [styles.MenuItemLabelTextSelected]: this.isSelected(this.props.menuItem)
+        });
 
         return (
             <div className={styles.MenuItem}>
                 <div className={styles.MenuItemLabel}>
-                    {this.props.menuItem.children.length > 0
-                        && <span
-                            className={classNames("material-icons", styles.MenuItemIcon)}
-                            onClick={this.handleFolderClick}>{this.getIcon()}
-                        </span>}
+                    {this.props.menuItem.children.length > 0 && (
+                        <span
+                            className={classNames('material-icons', styles.MenuItemIcon)}
+                            onClick={this.handleFolderClick}
+                        >
+                            {this.getIcon()}
+                        </span>
+                    )}
 
-                    <span
-                        className={labelClassName}
-                        onClick={this.handleMenuItemClick}>
+                    <span className={labelClassName} onClick={this.handleMenuItemClick}>
                         {this.props.menuItem.title}
                     </span>
                 </div>
 
-                {this.props.menuItem.children.length > 0 && this.state.isOpen && this.renderChildren()}
+                {this.props.menuItem.children.length > 0 &&
+                    this.state.isOpen &&
+                    this.renderChildren()}
             </div>
         );
     }
@@ -47,22 +50,34 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
     private renderChildren() {
         return (
             <div className={styles.MenuItemChildren}>
-                {
-                    this.props.menuItem.children.map((child: Staticless.GitLab.IWikiPageTreeItem, index: number) => {
+                {this.props.menuItem.children.map(
+                    (child: Staticless.GitLab.IWikiPageTreeItem, index: number) => {
                         const key = `${index}-${child.slugPart}`;
                         return (
                             <div className={styles.MenuItemChild} key={key}>
-                                <MenuItemComponent menuItem={child} onClick={this.props.onClick} />
+                                <MenuItemComponent
+                                    menuItem={child}
+                                    parentSlug={this.getSlug()}
+                                    onClick={this.props.onClick}
+                                />
                             </div>
                         );
-                    })
-                }
+                    }
+                )}
             </div>
         );
     }
 
+    private getSlug() {
+        if (this.props.parentSlug) {
+            return `${this.props.parentSlug}/${this.props.menuItem.slugPart}`;
+        }
+
+        return this.props.menuItem.slugPart;
+    }
+
     private getIcon() {
-        return this.state.isOpen ? "keyboard_arrow_down" : "keyboard_arrow_right";
+        return this.state.isOpen ? 'keyboard_arrow_down' : 'keyboard_arrow_right';
     }
 
     private handleMenuItemClick = () => {
@@ -73,17 +88,17 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
         if (this.props.menuItem.children.length > 0) {
             this.handleFolderClick();
         }
-    }
+    };
 
     private handleFolderClick = () => {
         this.setState({ isOpen: !this.state.isOpen });
-    }
+    };
 
     private shouldBeOpen(menuItem: Staticless.GitLab.IWikiPageTreeItem) {
         const slugPath = this.getWindowSlugPath();
 
         if (slugPath && menuItem.children.length > 0) {
-            return slugPath.startsWith(menuItem.slugPart);
+            return slugPath.startsWith(this.getSlug());
         }
 
         return false;
@@ -91,13 +106,15 @@ export class MenuItemComponent extends React.Component<IMenuItemProps, IMenuItem
 
     private isSelected(menuItem: Staticless.GitLab.IWikiPageTreeItem) {
         const slugPath = this.getWindowSlugPath();
-
         return menuItem.page && menuItem.page.slug === slugPath;
     }
 
     private getWindowSlugPath() {
         if (window.location.pathname && window.location.pathname.length > 0) {
-            return window.location.pathname.slice(1, window.location.pathname.length);
+            return window.location.pathname
+                .split('/')
+                .slice(2)
+                .join('/');
         } else {
             return undefined;
         }

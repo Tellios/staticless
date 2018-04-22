@@ -1,6 +1,6 @@
-import { injectable } from "inversify";
-import { TimeService } from "../time/TimeService";
-import { Config } from "../../Config";
+import { injectable } from 'inversify';
+import { TimeService } from '../time/TimeService';
+import { Config } from '../../Config';
 
 interface ICacheItem<TValue> {
     added: number;
@@ -12,10 +12,7 @@ export class CacheService<TKey, TValue> {
     private store: Map<TKey, ICacheItem<TValue>>;
     private lifeExpectancy: number;
 
-    constructor(
-        private timeService: TimeService,
-        private config: Config
-    ) { }
+    constructor(private timeService: TimeService, private config: Config) {}
 
     /**
      * Initializes the cache service.
@@ -29,7 +26,7 @@ export class CacheService<TKey, TValue> {
     public get(key: TKey): TValue | undefined {
         const item = this.store.get(key);
 
-        if (typeof item === "undefined") {
+        if (typeof item === 'undefined') {
             return undefined;
         } else {
             if (this.hasItemExpired(item)) {
@@ -59,6 +56,6 @@ export class CacheService<TKey, TValue> {
     }
 
     private convertMillisecondsToMinutes(milliseconds: number) {
-        return (milliseconds / 1000) / 60;
+        return milliseconds / 1000 / 60;
     }
 }

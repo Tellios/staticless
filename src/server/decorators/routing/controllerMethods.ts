@@ -1,12 +1,12 @@
-import { addRoute } from "./addRoute";
-import { IControllerObject } from "./IControllerObject";
+import { addRoute } from './addRoute';
+import { IControllerObject } from './IControllerObject';
 
 export function get(path: string) {
-    return methodDecoratorFunctionFactory("GET", path);
+    return methodDecoratorFunctionFactory('GET', path);
 }
 
 export function post(path: string) {
-    return methodDecoratorFunctionFactory("POST", path);
+    return methodDecoratorFunctionFactory('POST', path);
 }
 
 function methodDecoratorFunctionFactory(method: string, path: string) {

@@ -1,11 +1,11 @@
-import * as React from "react";
-import * as classNames from "classnames";
-import { LoadingComponent } from "../components/LoadingComponent";
-import { MenuItemComponent } from "./MenuItemComponent";
-import * as styles from "./NavComponent.css";
+import * as React from 'react';
+import * as classNames from 'classnames';
+import { LoadingComponent } from '../components/LoadingComponent';
+import { MenuItemComponent } from './MenuItemComponent';
+import * as styles from './NavComponent.css';
 
 export interface INavComponentProps {
-    pages: Staticless.GitLab.IWikiPageTreeItem[];
+    menu: Staticless.GitLab.IWikiPageTreeItem[];
     isLoading: boolean;
     isOpen: boolean;
     onNavigateToPage(slug: string): void;
@@ -13,19 +13,12 @@ export interface INavComponentProps {
 
 export class NavComponent extends React.Component<INavComponentProps> {
     public render() {
-        const className = classNames(
-            styles.Container,
-            {
-                [styles.ContainerOpen]: this.props.isOpen,
-                [styles.ContainerClosed]: !this.props.isOpen
-            }
-        );
+        const className = classNames(styles.Container, {
+            [styles.ContainerOpen]: this.props.isOpen,
+            [styles.ContainerClosed]: !this.props.isOpen
+        });
 
-        return (
-            <nav className={className}>
-                {this.props.isOpen && this.renderContent()}
-            </nav>
-        );
+        return <nav className={className}>{this.props.isOpen && this.renderContent()}</nav>;
     }
 
     private renderContent() {
@@ -41,7 +34,7 @@ export class NavComponent extends React.Component<INavComponentProps> {
     }
 
     private renderMenuItems() {
-        return this.props.pages.map((page, index) => {
+        return this.props.menu.map((page, index) => {
             return (
                 <MenuItemComponent
                     key={index}

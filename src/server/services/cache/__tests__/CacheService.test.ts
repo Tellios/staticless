@@ -1,8 +1,8 @@
-import { CacheService } from "../CacheService";
-import { TimeService } from "../../time/TimeService";
-import { Config } from "../../../Config";
+import { CacheService } from '../CacheService';
+import { TimeService } from '../../time/TimeService';
+import { Config } from '../../../Config';
 
-describe("CacheService", () => {
+describe('CacheService', () => {
     let timeServiceMock: Partial<TimeService>;
     let configMock: Partial<Config>;
     let cacheService: CacheService<string, string>;
@@ -20,33 +20,30 @@ describe("CacheService", () => {
             }))
         };
 
-        cacheService = new CacheService(
-            timeServiceMock as TimeService,
-            configMock as Config
-        );
+        cacheService = new CacheService(timeServiceMock as TimeService, configMock as Config);
     });
 
-    describe("set", () => {
-        test("should add item to cache", () => {
+    describe('set', () => {
+        test('should add item to cache', () => {
             cacheService.initialize();
 
-            cacheService.set("key", "value");
-            const value = cacheService.get("key");
+            cacheService.set('key', 'value');
+            const value = cacheService.get('key');
 
-            expect(value).toBe("value");
+            expect(value).toBe('value');
         });
 
-        test("should replace existing item if called multiple times with same key", () => {
+        test('should replace existing item if called multiple times with same key', () => {
             cacheService.initialize();
 
-            cacheService.set("key", "value1");
-            cacheService.set("key", "value2");
-            const value = cacheService.get("key");
+            cacheService.set('key', 'value1');
+            cacheService.set('key', 'value2');
+            const value = cacheService.get('key');
 
-            expect(value).toBe("value2");
+            expect(value).toBe('value2');
         });
 
-        test("should not cache item if cache time is set to 0", () => {
+        test('should not cache item if cache time is set to 0', () => {
             configMock.get = jest.fn(() => ({
                 cache: {
                     time: 0
@@ -55,16 +52,17 @@ describe("CacheService", () => {
 
             cacheService.initialize();
 
-            cacheService.set("key", "value1");
-            const value = cacheService.get("key");
+            cacheService.set('key', 'value1');
+            const value = cacheService.get('key');
 
             expect(value).toBeUndefined();
         });
     });
 
-    describe("get", () => {
-        test("should return undefined if item has expired", () => {
-            timeServiceMock.getCurrentTimeInMilliseconds = jest.fn()
+    describe('get', () => {
+        test('should return undefined if item has expired', () => {
+            timeServiceMock.getCurrentTimeInMilliseconds = jest
+                .fn()
                 .mockImplementationOnce(() => 0)
                 // 4 minutes has passed
                 .mockImplementationOnce(() => 4 * 1000 * 60);
@@ -78,8 +76,8 @@ describe("CacheService", () => {
 
             cacheService.initialize();
 
-            cacheService.set("key", "value");
-            const value = cacheService.get("key");
+            cacheService.set('key', 'value');
+            const value = cacheService.get('key');
 
             expect(value).toBeUndefined();
         });

@@ -1,7 +1,7 @@
-
-const STORAGE_KEY = "staticless-settings";
+const STORAGE_KEY = 'staticless-settings';
 const DEFAULT_SETTINGS: Client.ISettings = {
-    codeTheme: "atom-one-dark"
+    codeTheme: 'atom-one-dark',
+    wikiMenuOpen: true
 };
 
 class SettingsRepository {
@@ -12,10 +12,14 @@ class SettingsRepository {
             return { ...DEFAULT_SETTINGS };
         }
 
-        return JSON.parse(settings) as Client.ISettings;
+        return {
+            ...DEFAULT_SETTINGS,
+            ...(JSON.parse(settings) as Client.ISettings)
+        };
     }
 
-    public set(settings: Client.ISettings): void {
+    public set(settings: Partial<Client.ISettings>): void {
+        settings = { ...this.get(), ...settings };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
     }
 }

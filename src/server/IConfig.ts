@@ -6,11 +6,7 @@ export interface IConfig {
         port: number;
     };
 
-    gitlab: {
-        url: string;
-        apiToken: string;
-        projectId: string;
-    };
+    sources: ISourceConfig[];
 
     cache: {
         /**
@@ -19,4 +15,12 @@ export interface IConfig {
          */
         time: number;
     };
+}
+
+export interface ISourceConfig {
+    name: string;
+    homeslug: string;
+    url: string;
+    apitoken: string;
+    projectid: string;
 }

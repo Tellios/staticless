@@ -1,8 +1,5 @@
-import { injectable } from "inversify";
-import {
-    LeveledLogMethod,
-    LoggerInstance
-} from "winston";
+import { injectable } from 'inversify';
+import { LeveledLogMethod, LoggerInstance } from 'winston';
 
 @injectable()
 export class Log {
@@ -12,9 +9,7 @@ export class Log {
     public readonly verbose: LeveledLogMethod;
     public readonly debug: LeveledLogMethod;
 
-    constructor(
-        private logger: LoggerInstance
-    ) {
+    constructor(private logger: LoggerInstance) {
         this.error = logger.error;
         this.warn = logger.warn;
         this.info = logger.info;
