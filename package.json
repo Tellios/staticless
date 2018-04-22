@@ -8,6 +8,7 @@
     "pretty-ci": "prettier --config .prettierrc.json --list-different \"src/**/*.{ts,tsx}\"",
     "test": "jest",
     "test:watch": "jest --watchAll",
+    "precommit": "npm run pretty && npm run test && npm run build:prod",
     "cleanDist": "rimraf dist",
     "prebuild:prod": "npm run cleanDist",
     "build:prod": "tsc -p tsconfig.build.json && webpack --env.prod",

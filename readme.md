@@ -9,15 +9,12 @@ The required [GitLab API](https://docs.gitlab.com/ce/api/wikis.html) was added i
 For now the only supported way of using Staticless is by using the provided [Docker container](https://store.docker.com/community/images/tellios/staticless). More ways may be added and documented in the future.
 
 ### Configuring Staticless
-Configurations can be applied using arguments, environment variables and configuration files. It is also possible to combine these options, which in turn will override the other configurations using this order (first overrides everything):
+Configurations can be applied using configuration files using the following paths:
 
-1. Application arguments
-2. Environment variables
-3. Working directory `staticless.json` file
-4. `Application directory/config/staticless.json` file
+1. Working directory `staticless.json` file
+2. `Application directory/config/staticless.json` file
 
 #### Configuration properties
-All properties can be applied using the options listed above. When using properties with a nested structure the delimiter for arguments is '.' and in environment variables it is '_'.
 
 An example of this is the JSON configuration here:
 
@@ -33,34 +30,23 @@ which is equivalent to the argument `--object.property value` and the environmen
 
 ##### Available configuration properties
 
-| Property          | Type     | Description                                                                    |
-| ----------------- | -------- | ------------------------------------------------------------------------------ |
-| frontend.title    | String   | Title displayed in the web UI.                                                 |
-| frontend.homeslug | String   | A wiki slug pointing to the default page displayed when no page is selected    |
-| gitlab.apitoken   | String   | Token used to authenticate with the GitLab API.                                |
-| gitlab.projectid  | Number   | The ID of the GitLab project which contains the WIKI.                          |
-| gitlab.url        | String   | Url to the GitLab instance used, e.g for GitLab.com it is https://gitlab.com/. |
-| server.address    | String   | Host name or IP address the server will listen on, defaults to `0.0.0.0`.      |
-| server.port       | Number   | Ports the server will listen on, defaults to `8080`.                           |
-| cache.time        | Number   | Minutes to cache gitlab related items. `0` will disable caching.               |
+| Property            | Type     | Description                                                                  |
+| ------------------- | -------- | ---------------------------------------------------------------------------- |
+| frontend.title      | String   | Title displayed in the web UI.                                               |
+| server.address      | String   | Host name or IP address the server will listen on, defaults to `0.0.0.0`.    |
+| server.port         | Number   | Ports the server will listen on, defaults to `8080`.                         |
+| cache.time          | Number   | Minutes to cache gitlab related items. `0` will disable caching.             |
+| sources             | Array    | The available wikis as an array.                                             |
+| sources[i].name     | String   | The name of the wiki, used to identify the wiki to users.                    |
+| sources[i].homeslug | String   | The wiki slug displayed by default when no page has been selected.           |
+| sources[i].apitoken | String   | Token used to authenticate with the GitLab API.                              |
+| sources[i].url      | String   | Url to the GitLab instance used, for GitLab.com it is https://gitlab.com/.   |
+| sources[i].projectid| Number   | The ID of the GitLab project which contains the WIKI.                        |
 
 ### Using Docker
 When using docker, both the `server.address` and `server.port` configurations will always be set to their defaults. Changing the port and listener address is instead managed by exposing the container on different ports using docker port mapping.
 
 Start a container instance of Staticless by running the following `docker run` command:
-
-```shell
-docker run \
-  -d \
-  -e "GITLAB_APITOKEN=my-api-token" \
-  -e "GITLAB_PROJECTID=my-project-id" \
-  -e "GITLAB_URL=my-gitlab-url"
-  -e "FRONTEND_TITLE=\"My wiki\"" \
-  -e "FRONTEND_HOMESLUG=\"home\"" \
-  tellios/staticless
-```
-
-It is also possible to use the container with a configuration file:
 
 ```shell
 docker run \
