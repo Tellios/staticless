@@ -4,7 +4,6 @@
         "allowJs": false,
         "alwaysStrict": true,
         "newLine": "LF",
-        "outFile": "./dist/client/app.js",
         "target": "es5",
         "sourceMap": true,
         "strictNullChecks": true,

@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import * as request from 'superagent';
-import * as styles from './AppComponent.css';
+import * as styles from './AppContainer.css';
 import { HeaderContainer } from './header/HeaderContainer';
 import { NavContainer } from './nav/NavContainer';
 import { PageContainer } from './page/PageContainer';
 import { SettingsContainer } from './settings/SettingsContainer';
 import { LoadingComponent } from './components/LoadingComponent';
 import { settingsOpen } from './state/settingsActions';
-import { fetchConfig, selectSource } from './state/configActions';
+import { fetchConfig, selectSource, selectInitialSource } from './state/configActions';
 import { fetchPage } from './state/wikiActions';
 
 export interface IAppComponentProps {
@@ -25,6 +24,7 @@ export interface IAppComponentDispatch {
     settingsOpen(): void;
     configLoad(): void;
     selectSource(source: Staticless.Config.ISource, addToHistory: boolean): void;
+    selectInitialSource(source: Staticless.Config.ISource): void;
     fetchPage(sourceName: string, slug: string, addToHistory: boolean): void;
 }
 
@@ -49,6 +49,7 @@ const mapDispatchToProps = (dispatch: any): IAppComponentDispatch => ({
     settingsOpen: () => dispatch(settingsOpen()),
     configLoad: () => dispatch(fetchConfig()),
     selectSource: (source, addToHistory) => dispatch(selectSource(source, addToHistory)),
+    selectInitialSource: source => dispatch(selectInitialSource(source)),
     fetchPage: (sourceName, slug, addToHistory) =>
         dispatch(fetchPage(sourceName, slug, addToHistory))
 });
@@ -80,11 +81,13 @@ export const AppContainer = connect(mapStateToProps, mapDispatchToProps)(
         }
 
         public componentDidUpdate(oldProps: IAppComponentProps & IAppComponentDispatch) {
-            const { sources, selectedSource, configLoaded, config } = this.props;
+            const { sources, configLoaded, config } = this.props;
 
-            if (configLoaded && config !== oldProps.config) {
+            if (configLoaded && config !== oldProps.config && config) {
+                document.title = config.title;
+
                 if (window.location.pathname === '/') {
-                    this.props.selectSource(sources[0], false);
+                    this.props.selectInitialSource(sources[0]);
                 } else {
                     this.navigateToCurrentHref();
                 }

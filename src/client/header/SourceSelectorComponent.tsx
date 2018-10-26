@@ -1,9 +1,5 @@
 import * as React from 'react';
-import { InputLabel } from 'material-ui/Input';
-import Select from 'material-ui/Select';
-import { MenuItem } from 'material-ui/Menu';
-import { withStyles, WithStyles } from 'material-ui/styles';
-import { Theme } from 'material-ui/styles/createMuiTheme';
+import { InputLabel, Select, MenuItem, withStyles, WithStyles, Theme } from '@material-ui/core';
 
 export interface ISourceSelectorProps {
     sources: Staticless.Config.ISource[];
@@ -24,7 +20,7 @@ const decorate = withStyles((theme: Theme) => ({
     }
 }));
 
-export const SourceSelectorComponent = decorate<ISourceSelectorProps>(
+export const SourceSelectorComponent = decorate(
     class extends React.Component<
         ISourceSelectorProps & WithStyles<'root'> & WithStyles<'select'> & WithStyles<'icon'>
     > {

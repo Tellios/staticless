@@ -13,4 +13,4 @@ const reducer = combineReducers<Client.IState>({
 
 const middleware = applyMiddleware(thunk, logger);
 
-export const store = createStore<Client.IState>(reducer, middleware);
+export const store = createStore<Client.IState, any, any, any>(reducer, middleware);

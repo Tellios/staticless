@@ -1,10 +1,6 @@
-import { RouteConfiguration, Server as HapiServer } from 'hapi';
-import { Container } from 'inversify';
+import { ServerRoute, Server as HapiServer } from 'hapi';
 import * as path from 'path';
-import * as process from 'process';
-import { readdirSync } from 'fs-extra';
 import * as klaw from 'klaw-sync';
-import * as url from 'url';
 import { BaseController } from './controllers/base/BaseController';
 
 export function configureRouting(hapiServer: HapiServer, controllers: BaseController[]) {
@@ -20,10 +16,10 @@ function configureClientRoutes(hapiServer: HapiServer) {
     hapiServer.route(getFallbackRoute(clientDir));
 }
 
-function getFileRoutes(clientDir: string, files: string[]): RouteConfiguration[] {
+function getFileRoutes(clientDir: string, files: string[]): ServerRoute[] {
     return files
         .filter((file: string) => !file.endsWith('index.html'))
-        .map((file: string): RouteConfiguration => {
+        .map((file: string): ServerRoute => {
             const fileWebPath = file.substring(clientDir.length).replace(/\\/g, '/');
 
             return {
@@ -36,7 +32,7 @@ function getFileRoutes(clientDir: string, files: string[]): RouteConfiguration[]
         });
 }
 
-function getFallbackRoute(clientDir: string): RouteConfiguration {
+function getFallbackRoute(clientDir: string): ServerRoute {
     return {
         handler: {
             file: path.join(clientDir, 'index.html')
@@ -55,7 +51,7 @@ function configureControllerRoutes(hapiServer: HapiServer, controllers: BaseCont
 
             return {
                 ...route
-            } as RouteConfiguration;
+            } as ServerRoute;
         });
 
         hapiServer.route(hapiRoutes);

@@ -1,11 +1,15 @@
 import * as React from 'react';
 import { ModalComponent } from '../components/ModalComponent';
-import Input, { InputLabel } from 'material-ui/Input';
-import { MenuItem } from 'material-ui/Menu';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import Select from 'material-ui/Select';
-import { withStyles, WithStyles } from 'material-ui/styles';
-import { Theme } from 'material-ui/styles/createMuiTheme';
+import {
+    Input,
+    InputLabel,
+    Select,
+    MenuItem,
+    FormControl,
+    withStyles,
+    WithStyles,
+    Theme
+} from '@material-ui/core';
 
 export interface ISettingsComponentProps {
     settings: Client.ISettings;
@@ -20,7 +24,7 @@ const decorate = withStyles((theme: Theme) => ({
     }
 }));
 
-export const SettingsComponent = decorate<ISettingsComponentProps>(
+export const SettingsComponent = decorate(
     class extends React.Component<ISettingsComponentProps & WithStyles<'formControl'>> {
         public render() {
             return (

@@ -1,4 +1,5 @@
 import { Server as HapiServer } from 'hapi';
+import * as Hapi from 'hapi';
 import { Container } from 'inversify';
 import * as winston from 'winston';
 import { Config } from './Config';
@@ -10,33 +11,31 @@ import { loadConfig } from './loadConfig';
 import { Log } from './Log';
 
 export class Server {
-    public init() {
+    public async init() {
         const config = this.initializeConfig();
         const log = this.initializeLogging();
 
         log.debug('Initializing container');
         const container = this.initializeContainer(log, config);
 
-        log.debug('Intializing hapi server instance');
-        const hapiServer = this.intializeHapiServer(config.get());
+        try {
+            log.debug('Intializing hapi server instance');
+            const hapiServer = await this.intializeHapiServer(config.get());
 
-        log.debug('Initializing routes');
-        this.initializeRoutes(hapiServer, container);
+            log.debug('Initializing hapi server instance');
+            await hapiServer.initialize();
 
-        log.debug('Starting hapi server instance');
-        hapiServer.start(err => {
-            if (err) {
-                log.error(err.toString());
-                return;
-            }
+            log.debug('Initializing routes');
+            this.initializeRoutes(hapiServer, container);
 
-            if (hapiServer.info) {
-                log.info(`Server running at: ${hapiServer.info.uri}`);
-            } else {
-                log.error('Server was started but had no info attached to it');
-                process.exit(1);
-            }
-        });
+            log.debug('Starting hapi server instance');
+            await hapiServer.start();
+
+            log.info(`Server running at: ${hapiServer.info.uri}`);
+        } catch (error) {
+            log.error(`Failed to start server: ${error.message}`);
+            process.exit(1);
+        }
     }
 
     private initializeConfig(): Config {
@@ -45,13 +44,13 @@ export class Server {
     }
 
     private initializeLogging(): Log {
-        const logger = new winston.Logger({
+        const { combine, colorize, padLevels, simple } = winston.format;
+
+        const logger = winston.createLogger({
             level: 'info',
             transports: [
                 new winston.transports.Console({
-                    colorize: true,
-                    showLevel: true,
-                    timestamp: true
+                    format: combine(padLevels(), simple(), colorize())
                 })
             ]
         });
@@ -66,13 +65,13 @@ export class Server {
         return container;
     }
 
-    private intializeHapiServer(config: IConfig): HapiServer {
-        const hapiServer = new HapiServer();
-        hapiServer.register([require('hapi-async-handler'), require('inert')]);
-        hapiServer.connection({
+    private async intializeHapiServer(config: IConfig): Promise<HapiServer> {
+        const hapiServer = new Hapi.Server({
             address: config.server.address,
             port: config.server.port
         });
+
+        await hapiServer.register([/*require('hapi-async-handler'), */require('inert')]);
 
         return hapiServer;
     }
