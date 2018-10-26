@@ -1,11 +1,11 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import Dialog, { DialogActions, DialogContent, DialogTitle } from 'material-ui/Dialog';
-import Button from 'material-ui/Button';
-import { KeyboardEvent } from 'react';
-import { Theme } from 'material-ui/styles/createMuiTheme';
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Button,
+} from '@material-ui/core';
 
 export interface IModalComponentProps {
     title: string;

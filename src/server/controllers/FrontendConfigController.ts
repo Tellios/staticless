@@ -1,4 +1,4 @@
-import { Base_Reply, Request } from 'hapi';
+import { ResponseToolkit, Request } from 'hapi';
 import { injectable } from 'inversify';
 import { Config } from '../Config';
 import { controller, get } from '../decorators/routing';
@@ -12,25 +12,25 @@ export class FrontendConfigController extends BaseController {
     }
 
     @get('/')
-    public async index(request: Request, reply: Base_Reply) {
+    public index(request: Request, response: ResponseToolkit) {
         try {
-            reply.response(this.config.get().frontend);
+            return response.response(this.config.get().frontend);
         } catch (error) {
-            reply.response(error.toString()).code(500);
+            return response.response(error.toString()).code(500);
         }
     }
 
     @get('/sources')
-    public async getSources(request: Request, reply: Base_Reply) {
+    public getSources(request: Request, response: ResponseToolkit) {
         try {
-            reply.response(
+            return response.response(
                 this.config.get().sources.map((source): Staticless.Config.ISource => ({
                     name: source.name,
                     homeSlug: source.homeslug
                 }))
             );
         } catch (error) {
-            reply.response(error.toString()).code(500);
+            return response.response(error.toString()).code(500);
         }
     }
 }

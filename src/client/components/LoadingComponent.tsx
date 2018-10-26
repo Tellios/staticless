@@ -1,7 +1,6 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
 import * as styles from './LoadingComponent.css';
-import { CircularProgress } from 'material-ui/Progress';
+import { CircularProgress } from '@material-ui/core';
 
 export class LoadingComponent extends React.Component {
     public render() {

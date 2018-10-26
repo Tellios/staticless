@@ -1,6 +1,7 @@
 import * as request from 'superagent';
-import { ActionCreator } from 'redux';
+import { ActionCreator, Dispatch } from 'redux';
 import { updateWindowHistory } from './updateWindowHistory';
+import { fetchPage } from './wikiActions';
 
 export const selectSource: ActionCreator<Client.IAction<Staticless.Config.ISource>> = (
     source: Staticless.Config.ISource,
@@ -17,6 +18,13 @@ export const selectSource: ActionCreator<Client.IAction<Staticless.Config.ISourc
     return {
         type: 'CONFIG_SELECT_SOURCE',
         payload: source
+    };
+};
+
+export const selectInitialSource = (source: Staticless.Config.ISource) => {
+    return (dispatch: Dispatch<any>) => {
+        dispatch(selectSource(source, false));
+        dispatch(fetchPage(source.name, source.homeSlug, false));
     };
 };
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { AppContainer } from './AppComponent';
+import { AppContainer } from './AppContainer';
 import { themeLoader } from './settings/ThemeLoader';
 import { Provider } from 'react-redux';
 import { store } from './state/store';

@@ -20,6 +20,7 @@ module.exports = (env) => {
 
     return {
         entry: "./src/client/app.tsx",
+        mode: "development",
 
         output: {
             filename: "app.js",

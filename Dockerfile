@@ -1,4 +1,4 @@
-FROM node:8.9.4-alpine
+FROM node:10.12.0-alpine
 LABEL name="Staticless" maintainer="https://github.com/Tellios"
 
 

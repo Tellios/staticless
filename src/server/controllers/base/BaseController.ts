@@ -1,4 +1,3 @@
-import { RouteConfiguration, Server } from 'hapi';
 import { injectable } from 'inversify';
 import { IRouteConfig } from '../../decorators/routing';
 

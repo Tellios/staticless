@@ -1,6 +1,5 @@
 import { upperFirst } from 'lodash';
 import { injectable } from 'inversify';
-import { Config } from '../../../Config';
 import { MarkdownParserService } from '../../markdown/MarkdownParserService';
 import { GitLabApiRepository } from './GitLabApiRepository';
 import { CacheService } from '../../cache/CacheService';
