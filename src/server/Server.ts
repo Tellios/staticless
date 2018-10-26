@@ -71,7 +71,7 @@ export class Server {
             port: config.server.port
         });
 
-        await hapiServer.register([/*require('hapi-async-handler'), */require('inert')]);
+        await hapiServer.register([/*require('hapi-async-handler'), */ require('inert')]);
 
         return hapiServer;
     }

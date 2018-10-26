@@ -25,6 +25,14 @@ export const selectInitialSource = (source: Staticless.Config.ISource) => {
     return (dispatch: Dispatch<any>) => {
         dispatch(selectSource(source, false));
         dispatch(fetchPage(source.name, source.homeSlug, false));
+        updateWindowHistory(
+            {
+                type: 'page',
+                sourceName: source.name,
+                slug: source.homeSlug
+            },
+            false
+        );
     };
 };
 

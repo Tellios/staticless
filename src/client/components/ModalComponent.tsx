@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Button,
-} from '@material-ui/core';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@material-ui/core';
 
 export interface IModalComponentProps {
     title: string;
